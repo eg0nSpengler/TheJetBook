@@ -1,0 +1,36 @@
+{
+  "Attack": [
+    {
+      "name": "A-10 Thunderbolt II",
+      "maker": "Fairchild Republic"
+    },
+    {
+      "name": "Su-25",
+      "maker": "Sukhoi"
+    },
+    {
+      "name": "37 Viggen",
+      "maker": "Saab"
+    }
+  ],
+
+  "Fighter": [
+    {
+      "name": "F-16 Fighting Falcon",
+      "maker": "General Dynamics"
+    },
+    {
+      "name": "MiG-29",
+      "maker": "Mikoyan"
+    },
+    {
+      "name": "F-15 Eagle",
+      "maker": "McDonnell Douglas"
+    },
+    {
+      "name": "F-15E Strike Eagle",
+      "maker": "McDonnell Douglas"
+    }
+
+  ]
+}
