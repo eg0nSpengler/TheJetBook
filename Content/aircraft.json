@@ -2,35 +2,55 @@
   "Attack": [
     {
       "name": "A-10 Thunderbolt II",
-      "maker": "Fairchild Republic"
+      "maker": "Fairchild Republic",
+      "img": "f16.png"
     },
     {
       "name": "Su-25",
-      "maker": "Sukhoi"
+      "maker": "Sukhoi",
+      "img": "f16.png"
     },
     {
       "name": "37 Viggen",
-      "maker": "Saab"
+      "maker": "Saab",
+      "img": "f16.png"
     }
   ],
 
   "Fighter": [
     {
       "name": "F-16 Fighting Falcon",
-      "maker": "General Dynamics"
+      "maker": "General Dynamics",
+      "img": "f16.png"
     },
     {
       "name": "MiG-29",
-      "maker": "Mikoyan"
+      "maker": "Mikoyan",
+      "img": "f16.png"
     },
     {
       "name": "F-15 Eagle",
-      "maker": "McDonnell Douglas"
+      "maker": "McDonnell Douglas",
+      "img": "f16.png"
     },
     {
       "name": "F-15E Strike Eagle",
-      "maker": "McDonnell Douglas"
+      "maker": "McDonnell Douglas",
+      "img": "f16.png"
     }
 
+  ],
+
+  "Bomber": [
+    {
+      "name": "B-2 Spirit",
+      "maker": "Northrop Gruman",
+      "img": "f16.png"
+    },
+    {
+      "name": "Tu-160",
+      "maker": "Tupolev",
+      "img": "f16.png"
+    }
   ]
 }
