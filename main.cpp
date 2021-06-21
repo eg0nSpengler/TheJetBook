@@ -14,6 +14,7 @@
 
 void init();
 void GetAircraftImages();
+void GetAircraftDetails();
 void ShowAircraftImage(const char* str);
 void ShowAircraftDetails(int selected);
 
@@ -28,16 +29,14 @@ void ShowAircraftDetails(int selected);
 #define CENTER_PANE_WINDOW_HEIGHT 300
 #define RIGHT_PANE_WINDOW_WIDTH 400
 #define RIGHT_PANE_WINDOW_HEIGHT 300
-#define IDLE_COLOR sf::Color::White
-#define HOVER_COLOR sf::Color::Cyan
-
 
 static const std::string imgFilePath = "./Content/Images/";
 static std::vector<sf::Texture> aircraftImages;
+static std::vector<std::vector<std::string>> aircraftData;
 
 int main()
 {
-	//GetAircraftImages();
+	GetAircraftDetails();
 	init();
 	return 0;
 }
@@ -150,7 +149,16 @@ void init()
 			static int currentItem = 0;
 			static int numRows = 10;
 			static std::vector<const char*> currentOptions;
-			static std::vector<const char*> tableOptions = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Fuel capacity", "Engine(s)" };
+			static std::vector<const char*> tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Fuel capacity", "Engine(s)" };
+			static std::vector<const char*> tableTwo = { "Maximum speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "Wing loading", "T/W ratio" };
+			static std::vector<std::vector<const char*>> tableOptions;
+			static int selectedTable = 0;
+
+			if (tableOptions.capacity() <= 0)
+			{
+				tableOptions.emplace_back(tableOne);
+				tableOptions.emplace_back(tableTwo);
+			}
 
 			for (auto i = 3; i > 0; i--)
 			{
@@ -158,15 +166,18 @@ void init()
 			}
 			
 			//setting up dropdown box
-			if (ImGui::Combo(" ", &currentItem, "General characteristics\0Performance\0Avionics"))
+			if (ImGui::Combo(" ", &currentItem, "General characteristics\0Performance\0Armament"))
 			{
 				switch (currentItem)
 				{
 				case 0:
+					selectedTable = 0;
 					break;
 				case 1:
+					selectedTable = 1;
 					break;
 				case 2:
+					selectedTable = 2;
 					break;
 				default:
 					break;
@@ -176,16 +187,15 @@ void init()
 			//displaying the table for the corresponding dropdown option 
 			if (ImGui::BeginTable("CurrentTable", 1))
 			{
-				for (auto i = 0; i < tableOptions.capacity(); i++)
+				for (auto i = 0; i < tableOptions.at(selectedTable).capacity(); i++)
 				{
 					ImGui::TableNextRow();
 
 					for (auto iy = 0; iy < 1; iy++)
 					{
 						ImGui::TableSetColumnIndex(iy);
-						ImGui::Text(tableOptions[i]);
+						ImGui::Text(tableOptions.at(selectedTable)[i]);
 					}
-					
 				}
 				ImGui::EndTable();
 			}
@@ -222,6 +232,7 @@ void GetAircraftImages()
 	sf::Texture tmpTexture;
 	tmpTexture.create(CENTER_PANE_WINDOW_WIDTH, CENTER_PANE_WINDOW_HEIGHT);
 
+	
 	for (const auto& elem : j.items())
 	{
 		//string conversion
@@ -239,6 +250,32 @@ void GetAircraftImages()
 				}
 			}
 		
+	}
+
+}
+
+void GetAircraftDetails()
+{
+	std::ifstream ifs("Content/aircraft.json");
+
+	nlohmann::json j;
+	ifs >> j;
+
+	for (const auto& elem : j.items())
+	{
+		//string conversion
+		std::string tmp = elem.key();
+
+		// going through each category
+		for (const auto& item : j[tmp])
+		{
+
+			// getting the general specs for each aircraft
+			for (auto i = item["genspecs"].begin(); i != item["genspecs"].end(); i++)
+			{
+
+			}
+		}
 	}
 
 }
