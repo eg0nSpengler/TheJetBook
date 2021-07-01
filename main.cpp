@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
 
 #include <imgui-sfml/imgui-SFML.h>
 #include <imgui/imgui.h>
@@ -12,11 +13,11 @@
 
 #include <nlohmann/json.hpp>
 
-void init();
-void GetAircraftImages();
-void GetAircraftDetails();
-void ShowAircraftImage(const char* str);
-void ShowAircraftDetails(int selected);
+static void init();
+static void GetAircraftImages();
+static void GetAircraftDetails();
+static void ShowAircraftImage(const char* str);
+static void ShowAircraftDetails(std::string str);
 
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
@@ -29,10 +30,14 @@ void ShowAircraftDetails(int selected);
 #define CENTER_PANE_WINDOW_HEIGHT 300
 #define RIGHT_PANE_WINDOW_WIDTH 400
 #define RIGHT_PANE_WINDOW_HEIGHT 300
+#define CENTER_PANE_INDENT 3
+#define NUM_COLUMNS 2
 
 static const std::string imgFilePath = "./Content/Images/";
 static std::vector<sf::Texture> aircraftImages;
-static std::vector<std::vector<std::string>> aircraftData;
+static std::multimap<std::string, std::string> aircraftData;
+static std::string currentAircraft;
+static std::vector<const char*> currentData;
 
 int main()
 {
@@ -111,6 +116,8 @@ void init()
 					{
 						//passing in the img name to access the corresponding aircraft image
 						ShowAircraftImage(tmpImgC);
+						//passing in the aircraft name to access the corresponding data
+						ShowAircraftDetails(tmpC);
 					}
 				}
 			}
@@ -160,7 +167,7 @@ void init()
 				tableOptions.emplace_back(tableTwo);
 			}
 
-			for (auto i = 3; i > 0; i--)
+			for (auto i = CENTER_PANE_INDENT; i > 0; i--)
 			{
 				ImGui::Indent();
 			}
@@ -185,7 +192,7 @@ void init()
 			}
 
 			//displaying the table for the corresponding dropdown option 
-			if (ImGui::BeginTable("CurrentTable", 1))
+			if (ImGui::BeginTable("CurrentTable", NUM_COLUMNS))
 			{
 				for (auto i = 0; i < tableOptions.at(selectedTable).capacity(); i++)
 				{
@@ -195,7 +202,10 @@ void init()
 					{
 						ImGui::TableSetColumnIndex(iy);
 						ImGui::Text(tableOptions.at(selectedTable)[i]);
+						ImGui::TableNextColumn();
+						ImGui::Text(currentData.at(i));
 					}
+
 				}
 				ImGui::EndTable();
 			}
@@ -266,18 +276,33 @@ void GetAircraftDetails()
 		//string conversion
 		std::string tmp = elem.key();
 
-		// going through each category
+		//going through each category
 		for (const auto& item : j[tmp])
 		{
+			//getting each aircraft name
+			std::string nameTmp = item["name"];
 
-			// getting the general specs for each aircraft
-			for (auto i = item["genspecs"].begin(); i != item["genspecs"].end(); i++)
+			currentAircraft = nameTmp;
+
+			//getting the general specs for each aircraft
+			for (const auto& spec : item["genspecs"])
 			{
+				//getting each individual spec
+				std::string specTmp = spec;
 
+				//associating the aircraft with its listed specs
+				aircraftData.insert(std::pair<std::string, std::string>(nameTmp, specTmp));
 			}
 		}
+
 	}
 
+	ShowAircraftDetails(currentAircraft);
+
+	/*for (std::pair<std::string, std::string> elem : aircraftData)
+	{
+		std::cout << elem.first << " :: " << elem.second << '\n';
+	}*/
 }
 
 void ShowAircraftImage(const char* str)
@@ -285,7 +310,33 @@ void ShowAircraftImage(const char* str)
 	
 }
 
-void ShowAircraftDetails(int selected)
+void ShowAircraftDetails(std::string str)
 {
+	//we already have data in our container
+	//clear it from the previous selection
+	if (currentData.size() > 0)
+	{
+		currentData.clear();
+	}
 
+	//searching for the selected aircraft
+	auto search = aircraftData.find(str);
+
+	//did we find our aircraft
+	if (search != aircraftData.end())
+	{
+		currentAircraft = str;
+	}
+
+	//getting the range of values for our aircraft key
+	auto range = aircraftData.equal_range(str);
+
+	//foreach value under this aircraft key
+	for (auto i = range.first; i != range.second; ++i)
+	{
+		//string conversion
+		auto tmp = i->second.c_str();
+
+		currentData.push_back(tmp);
+	}
 }
