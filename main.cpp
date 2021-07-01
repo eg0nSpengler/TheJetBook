@@ -156,7 +156,7 @@ void init()
 			static int currentItem = 0;
 			static int numRows = 10;
 			static std::vector<const char*> currentOptions;
-			static std::vector<const char*> tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Fuel capacity", "Engine(s)" };
+			static std::vector<const char*> tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Internal fuel capacity", "Engine(s)" };
 			static std::vector<const char*> tableTwo = { "Maximum speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "Wing loading", "T/W ratio" };
 			static std::vector<std::vector<const char*>> tableOptions;
 			static int selectedTable = 0;
