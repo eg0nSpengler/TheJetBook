@@ -1,52 +1,27 @@
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <map>
+#include "UIEngine.h"
 
-#include <imgui-sfml/imgui-SFML.h>
-#include <imgui/imgui.h>
 
-#include <SFML/Graphics.hpp>
-#include <SFML/System/Clock.hpp>
-#include <SFML/Window/Event.hpp>
+UIEngine::UIEngine()
+{	
+	imgFilePath = "./Content/Images/";
+	selectedSpecSheet = SPEC_TYPE::GEN;
+	selectedTable = 0;
+	currentItem = 0;
+	numRows = 10;
+	tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Internal fuel capacity", "Engine(s)" };
+	tableTwo = { "Maximum speed", "Cruise speed", "Stall speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "T/W ratio" };
 
-#include <nlohmann/json.hpp>
-
-static void init();
-static void GetAircraftImages();
-static void GetAircraftDetails();
-static void ShowAircraftImage(const char* str);
-static void ShowAircraftDetails(std::string str);
-
-#define WINDOW_WIDTH 1024
-#define WINDOW_HEIGHT 768
-#define PARENT_WINDOW_WIDTH 800
-#define PARENT_WINDOW_HEIGHT 600
-#define PARENT_WINDOW_TITLE "The JetBook"
-#define LEFT_PANE_WINDOW_WIDTH 200
-#define LEFT_PANE_WINDOW_HEIGHT 600
-#define CENTER_PANE_WINDOW_WIDTH 400
-#define CENTER_PANE_WINDOW_HEIGHT 300
-#define RIGHT_PANE_WINDOW_WIDTH 400
-#define RIGHT_PANE_WINDOW_HEIGHT 300
-#define CENTER_PANE_INDENT 3
-#define NUM_COLUMNS 2
-
-static const std::string imgFilePath = "./Content/Images/";
-static std::vector<sf::Texture> aircraftImages;
-static std::multimap<std::string, std::string> aircraftData;
-static std::string currentAircraft;
-static std::vector<const char*> currentData;
-
-int main()
-{
-	GetAircraftDetails();
-	init();
-	return 0;
+	Init();
 }
 
-void init()
+void UIEngine::Init()
+{
+	//GetAircraftImages();
+	GetAircraftInfoFromJSON();
+	ShowAircraftSpecs(selectedSpecSheet);
+}
+
+void UIEngine::Run()
 {
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), " ", sf::Style::Close);
 	window.setVerticalSyncEnabled(true);
@@ -104,39 +79,30 @@ void init()
 				//and placing it under their respective category
 				for (const auto& item : j[tmp])
 				{
-					std::string tmp = item["name"]; //aircraft name
+					std::string tmpName = item["name"]; //aircraft name
 					std::string tmpImg = item["img"]; //aircraft image
+					currentAircraft = tmpName;
 
 					//string conversion again, so that we can apply it as the Selectable labels
-					auto tmpC = tmp.c_str();
-					auto tmpImgC = tmpImg.c_str();
+					auto tmpC = tmpName.c_str();
 
 					//creating a selectable element for each aircraft
 					if (ImGui::Selectable(tmpC, isSelected))
 					{
 						//passing in the img name to access the corresponding aircraft image
-						ShowAircraftImage(tmpImgC);
-						//passing in the aircraft name to access the corresponding data
-						ShowAircraftDetails(tmpC);
+						ShowAircraftImage(tmpImg);
+						ShowAircraftSpecs(selectedSpecSheet);
 					}
 				}
 			}
-			
-		}
 
-		/*for (const auto& item : j["Attack"])
-		{
-			//Get the aircraft name
-			std::string tmp = item["name"];
-			//Convert the string to a char array
-			auto tmpC = tmp.c_str();
-		}*/
+		}
 
 		/*END LEFT PANEL*/
 		ImGui::EndChild(); ImGui::SameLine();
 
 		static ImVec2 defaultCursorPos = ImGui::GetCursorPos();
-		
+
 		/*BEGIN CENTER PANEL*/
 		if (ImGui::BeginChild("CENTERPANE", ImVec2(CENTER_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT / 2), true, ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
 		{
@@ -153,13 +119,6 @@ void init()
 		/*BEGIN BOTTOM PANEL*/
 		if (ImGui::BeginChild("BOTTOMPANE", ImVec2(CENTER_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT / 2), true, ImGuiWindowFlags_NoNavInputs))
 		{
-			static int currentItem = 0;
-			static int numRows = 10;
-			static std::vector<const char*> currentOptions;
-			static std::vector<const char*> tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Internal fuel capacity", "Engine(s)" };
-			static std::vector<const char*> tableTwo = { "Maximum speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "Wing loading", "T/W ratio" };
-			static std::vector<std::vector<const char*>> tableOptions;
-			static int selectedTable = 0;
 
 			if (tableOptions.capacity() <= 0)
 			{
@@ -171,7 +130,7 @@ void init()
 			{
 				ImGui::Indent();
 			}
-			
+
 			//setting up dropdown box
 			if (ImGui::Combo(" ", &currentItem, "General characteristics\0Performance\0Armament"))
 			{
@@ -179,16 +138,21 @@ void init()
 				{
 				case 0:
 					selectedTable = 0;
+					selectedSpecSheet = SPEC_TYPE::GEN;
 					break;
 				case 1:
 					selectedTable = 1;
+					selectedSpecSheet = SPEC_TYPE::PERF;
 					break;
 				case 2:
 					selectedTable = 2;
+					selectedSpecSheet = SPEC_TYPE::ARM;
 					break;
 				default:
 					break;
 				}
+
+				ShowAircraftSpecs(selectedSpecSheet);
 			}
 
 			//displaying the table for the corresponding dropdown option 
@@ -209,18 +173,18 @@ void init()
 				}
 				ImGui::EndTable();
 			}
-			
+
 		}
 
 		/*END BOTTOM PANEL*/
 		ImGui::EndChild();
 
-		ImGui::SetCursorPos(newCursorPos); 
+		ImGui::SetCursorPos(newCursorPos);
 		/*BEGIN RIGHT PANEL*/
 		ImGui::BeginChild("RIGHTPANE", ImVec2(LEFT_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT), true, ImGuiWindowFlags_NoNavInputs);
 		/*END RIGHT PANEL*/
 		ImGui::EndChild();
-		
+
 		ImGui::End();
 
 		window.clear(bgColor);
@@ -228,12 +192,12 @@ void init()
 		window.display();
 	}
 
-	
+
 	ImGui::SFML::Shutdown();
 
 }
 
-void GetAircraftImages()
+void UIEngine::GetAircraftImagesFromJSON()
 {
 	std::ifstream ifs("Content/aircraft.json");
 
@@ -261,10 +225,9 @@ void GetAircraftImages()
 			}
 		
 	}
-
 }
 
-void GetAircraftDetails()
+void UIEngine::GetAircraftInfoFromJSON()
 {
 	std::ifstream ifs("Content/aircraft.json");
 
@@ -285,19 +248,24 @@ void GetAircraftDetails()
 			currentAircraft = nameTmp;
 
 			//getting the general specs for each aircraft
-			for (const auto& spec : item["genspecs"])
+			for (const auto& genSpec : item["genspecs"])
 			{
 				//getting each individual spec
-				std::string specTmp = spec;
+				std::string genSpecTmp = genSpec;
 
 				//associating the aircraft with its listed specs
-				aircraftData.insert(std::pair<std::string, std::string>(nameTmp, specTmp));
+				aircraftGenData.insert(std::pair<std::string, std::string>(nameTmp, genSpecTmp));
+			}
+
+			for (const auto& perfSpec : item["perf"])
+			{
+				std::string perfSpecTmp = perfSpec;
+
+				aircraftPerfData.insert(std::pair<std::string, std::string>(nameTmp, perfSpecTmp));
 			}
 		}
 
 	}
-
-	ShowAircraftDetails(currentAircraft);
 
 	/*for (std::pair<std::string, std::string> elem : aircraftData)
 	{
@@ -305,12 +273,12 @@ void GetAircraftDetails()
 	}*/
 }
 
-void ShowAircraftImage(const char* str)
+void UIEngine::ShowAircraftImage(std::string str)
 {
-	
+
 }
 
-void ShowAircraftDetails(std::string str)
+void UIEngine::ShowAircraftSpecs(SPEC_TYPE type)
 {
 	//we already have data in our container
 	//clear it from the previous selection
@@ -319,24 +287,40 @@ void ShowAircraftDetails(std::string str)
 		currentData.clear();
 	}
 
-	//searching for the selected aircraft
-	auto search = aircraftData.find(str);
-
-	//did we find our aircraft
-	if (search != aircraftData.end())
+	switch (type)
 	{
-		currentAircraft = str;
+	case SPEC_TYPE::GEN:
+		GetAircraftSpecs(aircraftGenData);
+		break;
+	case SPEC_TYPE::PERF:
+		GetAircraftSpecs(aircraftPerfData);
+		break;
+	case SPEC_TYPE::ARM:
+		break;
+	default:
+		break;
 	}
 
-	//getting the range of values for our aircraft key
-	auto range = aircraftData.equal_range(str);
+}
 
-	//foreach value under this aircraft key
-	for (auto i = range.first; i != range.second; ++i)
+void UIEngine::GetAircraftSpecs(const std::multimap<std::string, std::string>& map)
+{
+	auto search = map.begin();
+
+	if (search != map.end())
 	{
-		//string conversion
-		auto tmp = i->second.c_str();
+		//getting the range of values for our aircraft key
+		auto range = map.equal_range(currentAircraft);
 
-		currentData.push_back(tmp);
+		//for each value under this aircraft key
+		for (auto i = range.first; i != range.second; ++i)
+		{
+			//string conversion
+			auto tmp = i->second.c_str();
+
+			//add our values into this container
+			//to be displayed on the spec sheet
+			currentData.push_back(tmp);
+		}
 	}
 }
