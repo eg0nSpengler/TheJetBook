@@ -20,9 +20,18 @@ class UIEngine
 {
 	enum class SPEC_TYPE
 	{
+		/// <summary>
+		/// General specs
+		/// </summary>
 		GEN,
+		/// <summary>
+		/// Performance specs
+		/// </summary>
 		PERF,
-		ARM
+		/// <summary>
+		/// Avionic systems
+		/// </summary>
+		AVI
 	};
 
 public:
@@ -31,9 +40,9 @@ public:
 	void Run();
 	void GetAircraftImagesFromJSON();
 	void GetAircraftInfoFromJSON();
-	void ShowAircraftImage(std::string str);
 	void ShowAircraftSpecs(SPEC_TYPE type);
 	void GetAircraftSpecs(const std::multimap<std::string, std::string>& map);
+	const sf::Sprite& ShowAircraftImage();
 
 private:
 	int selectedTable;
@@ -43,13 +52,24 @@ private:
 private:
 	std::string imgFilePath;
 	std::string currentAircraft;
+	/// <summary>
+	/// Contains general spec data for aircraft
+	/// </summary>
 	std::multimap<std::string, std::string> aircraftGenData;
+	/// <summary>
+	/// Contains performance data for aircraft
+	/// </summary>
 	std::multimap<std::string, std::string> aircraftPerfData;
-	std::vector<sf::Texture> aircraftImages;
+	/// <summary>
+	/// Contains avionic system(s) data for aircraft
+	/// </summary>
+	std::multimap<std::string, std::string> aircraftAviData;
+	std::map<std::string, sf::Sprite> aircraftImages;
+	std::vector<std::shared_ptr<sf::Texture>> imgTextures;
+	std::vector<std::vector<const char*>> tableOptions;
 	std::vector<const char*> currentData;
 	std::vector<const char*> tableOne;
 	std::vector<const char*> tableTwo;
-	std::vector<std::vector<const char*>> tableOptions;
 
 private:
 	SPEC_TYPE selectedSpecSheet;

@@ -10,13 +10,12 @@ UIEngine::UIEngine()
 	numRows = 10;
 	tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Internal fuel capacity", "Engine(s)" };
 	tableTwo = { "Maximum speed", "Cruise speed", "Stall speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "T/W ratio" };
-
 	Init();
 }
 
 void UIEngine::Init()
 {
-	//GetAircraftImages();
+	GetAircraftImagesFromJSON();
 	GetAircraftInfoFromJSON();
 	ShowAircraftSpecs(selectedSpecSheet);
 }
@@ -79,9 +78,9 @@ void UIEngine::Run()
 				//and placing it under their respective category
 				for (const auto& item : j[tmp])
 				{
+					
 					std::string tmpName = item["name"]; //aircraft name
 					std::string tmpImg = item["img"]; //aircraft image
-					currentAircraft = tmpName;
 
 					//string conversion again, so that we can apply it as the Selectable labels
 					auto tmpC = tmpName.c_str();
@@ -89,10 +88,13 @@ void UIEngine::Run()
 					//creating a selectable element for each aircraft
 					if (ImGui::Selectable(tmpC, isSelected))
 					{
-						//passing in the img name to access the corresponding aircraft image
-						ShowAircraftImage(tmpImg);
+						currentAircraft = tmpC;
+						ShowAircraftImage();
 						ShowAircraftSpecs(selectedSpecSheet);
+						std::cout << currentAircraft << '\n';
+
 					}
+
 				}
 			}
 
@@ -104,9 +106,9 @@ void UIEngine::Run()
 		static ImVec2 defaultCursorPos = ImGui::GetCursorPos();
 
 		/*BEGIN CENTER PANEL*/
-		if (ImGui::BeginChild("CENTERPANE", ImVec2(CENTER_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT / 2), true, ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
+		if (ImGui::BeginChild("CENTERPANE", ImVec2(CENTER_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT / 2), false, ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
 		{
-
+			ImGui::Image(ShowAircraftImage());
 		}
 
 		/*END CENTER PANEL*/
@@ -132,7 +134,7 @@ void UIEngine::Run()
 			}
 
 			//setting up dropdown box
-			if (ImGui::Combo(" ", &currentItem, "General characteristics\0Performance\0Armament"))
+			if (ImGui::Combo(" ", &currentItem,"General characteristics\0Performance"))
 			{
 				switch (currentItem)
 				{
@@ -146,7 +148,7 @@ void UIEngine::Run()
 					break;
 				case 2:
 					selectedTable = 2;
-					selectedSpecSheet = SPEC_TYPE::ARM;
+					selectedSpecSheet = SPEC_TYPE::AVI;
 					break;
 				default:
 					break;
@@ -203,9 +205,6 @@ void UIEngine::GetAircraftImagesFromJSON()
 
 	nlohmann::json j;
 	ifs >> j;
-	sf::Texture tmpTexture;
-	tmpTexture.create(CENTER_PANE_WINDOW_WIDTH, CENTER_PANE_WINDOW_HEIGHT);
-
 	
 	for (const auto& elem : j.items())
 	{
@@ -217,10 +216,17 @@ void UIEngine::GetAircraftImagesFromJSON()
 			for (const auto& item : j[tmp])
 			{
 				std::string tmpImg = item["img"]; //aircraft image
+				std::string tmpName = item["name"]; //aircraft name
+				sf::Texture tmpTexture;
 
 				if (tmpTexture.loadFromFile(imgFilePath + tmpImg))
 				{
-					aircraftImages.emplace_back(sf::Texture(tmpTexture));
+					//for those wondering why a separate container for textures is necessary
+					//https://www.sfml-dev.org/tutorials/2.3/graphics-sprite.php#the-white-square-problem
+					//if you didnt read that the short verison is that when a sprite sets its texture
+					//it doesn't get an actual copy of the texture, it just stores a pointer to the texture itself
+					imgTextures.push_back(std::make_shared<sf::Texture>(tmpTexture));
+					aircraftImages.insert(std::pair<std::string, sf::Sprite>(tmpName, sf::Sprite(*imgTextures.back().get())));
 				}
 			}
 		
@@ -273,9 +279,14 @@ void UIEngine::GetAircraftInfoFromJSON()
 	}*/
 }
 
-void UIEngine::ShowAircraftImage(std::string str)
+const sf::Sprite& UIEngine::ShowAircraftImage()
 {
+	auto img = aircraftImages.find(currentAircraft);
 
+	if (img != aircraftImages.end())
+	{
+		return aircraftImages.at(currentAircraft);
+	}
 }
 
 void UIEngine::ShowAircraftSpecs(SPEC_TYPE type)
@@ -295,7 +306,7 @@ void UIEngine::ShowAircraftSpecs(SPEC_TYPE type)
 	case SPEC_TYPE::PERF:
 		GetAircraftSpecs(aircraftPerfData);
 		break;
-	case SPEC_TYPE::ARM:
+	case SPEC_TYPE::AVI:
 		break;
 	default:
 		break;
