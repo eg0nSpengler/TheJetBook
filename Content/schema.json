@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft-04/schema",
+  "title": "Aircraft",
+  "type": "object",
+  "properties": {
+    "aircraftName": {
+      "description": "The name of the aircraft",
+      "type": "string"
+    },
+    "aircraftMaker": {
+      "description": "The manufacturer of the aircraft",
+      "type": "string"
+    },
+    "aircraftImage": {
+      "description": "The image to use for this aircraft",
+      "type": "string"
+    },
+    "genSpecs": {
+      "description": "The general specifications of this aircraft",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Crew": {
+            "description": "The amount of crew in the aircraft",
+            "type": "integer"
+          },
+          "Length": {
+            "description": "The length of the aircraft",
+            "type": "integer"
+          },
+          "Wingspan": {
+            "description": "The wingspan of the aircraft",
+            "type": "integer"
+          },
+          "Height": {
+            "description": "The height of the aircraft",
+            "type": "integer"
+          },
+          "wingArea": {
+            "description": "The wing area of the aircraft",
+            "type": "integer"
+          },
+          "emptyWeight": {
+            "description": "The empty weight of the aircraft",
+            "type": "integer"
+          },
+          "grossWeight": {
+            "description": "The gross weight of the aircraft",
+            "type": "integer"
+          },
+          "maxTakeoffWeight": {
+            "description": "The MAX takeoff weight of the aircraft",
+            "type": "integer"
+          },
+          "fuelCapacity": {
+            "description": "The INTERNAL fuel capacity of the aircraft",
+            "type": "integer"
+          },
+          "numEngine": {
+            "description": "The number of engines used by the aircraft",
+            "type": "integer"
+          },
+          "Engine": {
+            "description": "The engine model used by the aircraft",
+            "type": "string"
+          }
+        },
+        "required": [
+          "Crew",
+          "Length"
+        ]
+      }
+    },
+    "performance": {
+      "description": "The performance specifications of this aircraft",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "maxSpeed": {
+            "description": "The maximum speed of the aircraft",
+            "type": "integer"
+          },
+          "cruiseSpeed": {
+            "description": "The cruise speed of the aircraft",
+            "type": "integer"
+          },
+          "stallSpeed": {
+            "description": "The stall speed of the aircraft",
+            "type": "integer"
+          },
+          "combatRange": {
+            "description": "The combat range of the aircraft",
+            "type": "integer"
+          },
+          "ferryRange": {
+            "description": "The ferry range of the aircraft",
+            "type": "integer"
+          },
+          "serviceCeiling": {
+            "description": "The service ceiling of the aircraft",
+            "type": "integer"
+          },
+          "gLimits": {
+            "description": "The g limits of the aircraft",
+            "type": "integer"
+          },
+          "rollRate": {
+            "description": "The roll rate of the aircraft",
+            "type": "integer"
+          },
+          "rateOfClimb": {
+            "description": "The rate of climb of the aircraft",
+            "type": "integer"
+          },
+          "twRatio": {
+            "description": "The thrust-to-weight ratio of the aircraft",
+            "type": "integer"
+          }
+        }
+      }
+    }
+
+  }
+}

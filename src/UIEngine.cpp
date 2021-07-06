@@ -10,6 +10,10 @@ UIEngine::UIEngine()
 	numRows = 10;
 	tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Internal fuel capacity", "Engine(s)" };
 	tableTwo = { "Maximum speed", "Cruise speed", "Stall speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "T/W ratio" };
+	sf::Texture tmpTexture;
+	tmpTexture.loadFromFile(imgFilePath + "noac.jpg");
+	noSelectionTexture = std::make_shared<sf::Texture>(tmpTexture);
+	noSelectionImg = std::make_shared<sf::Sprite>(sf::Sprite(*noSelectionTexture));
 	Init();
 }
 
@@ -226,7 +230,7 @@ void UIEngine::GetAircraftImagesFromJSON()
 					//if you didnt read that the short verison is that when a sprite sets its texture
 					//it doesn't get an actual copy of the texture, it just stores a pointer to the texture itself
 					imgTextures.push_back(std::make_shared<sf::Texture>(tmpTexture));
-					aircraftImages.insert(std::pair<std::string, sf::Sprite>(tmpName, sf::Sprite(*imgTextures.back().get())));
+					aircraftImages.insert(std::pair<std::string, sf::Sprite>(tmpName, sf::Sprite(*imgTextures.back())));
 				}
 			}
 		
@@ -287,6 +291,7 @@ const sf::Sprite& UIEngine::ShowAircraftImage()
 	{
 		return aircraftImages.at(currentAircraft);
 	}
+
 }
 
 void UIEngine::ShowAircraftSpecs(SPEC_TYPE type)

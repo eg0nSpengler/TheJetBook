@@ -160,6 +160,8 @@
     <None Include="Content\aircraft.json">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="Content\schema.json" />
+    <None Include="Content\testaircraft.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\UIDefines.h" />
@@ -170,7 +172,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties />
+      <UserProperties Content_4testaircraft_1json__JsonSchema="schema.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\aircraft.json" />
+    <None Include="Content\schema.json" />
+    <None Include="Content\testaircraft.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\UIEngine.h">

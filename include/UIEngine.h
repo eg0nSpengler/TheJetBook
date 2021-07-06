@@ -48,7 +48,7 @@ private:
 	int selectedTable;
 	int currentItem;
 	int numRows;
-
+	SPEC_TYPE selectedSpecSheet;
 private:
 	std::string imgFilePath;
 	std::string currentAircraft;
@@ -72,6 +72,7 @@ private:
 	std::vector<const char*> tableTwo;
 
 private:
-	SPEC_TYPE selectedSpecSheet;
+	std::shared_ptr<sf::Texture> noSelectionTexture;
+	std::shared_ptr<sf::Sprite> noSelectionImg;
 };
 

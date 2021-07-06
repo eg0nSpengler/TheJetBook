@@ -36,24 +36,24 @@
       "maker": "Mikoyan",
       "img": "mig29.jpg",
       "genspecs": [ "1", "56ft 10in", "37ft 3in", "15ft 6in", "410 sq ft", "24,251 lb", "32,849 lb", "39,683 lb", "7,716 lb", "2x Klimov RD-33" ],
-      "perf": [ "1,300 kn", "n/a", "n/a", "770 nm", "n/a", "59,000 ft", "+9", "n/a", "65,000 ft/min", "1.09" ]
+      "perf": [ "1,300 kn", "n/a", "n/a", "770 nm", "n/a", "59,000 ft", "+9.0", "n/a", "65,000 ft/min", "1.09" ]
     },
     {
       "name": "F-15 Eagle",
       "maker": "McDonnell Douglas",
       "img": "f15c.jpg",
       "genspecs": [ "1", "63ft 9in", "42ft 10in", "18ft 6in", "608 sq ft", "28,000 lb", "44,500 lb", "68,000 lb", "13,455 lb", "2x PW F100-PW-220" ],
-      "perf": [ "800 kn", "n/a", "n/a", "n/a", "n/a", "65,000 ft", "+9", "n/a", "67,050 ft/min", "1.07" ]
+      "perf": [ "800 kn", "n/a", "n/a", "n/a", "n/a", "65,000 ft", "+9.0", "n/a", "67,050 ft/min", "1.07" ]
     },
     {
       "name": "F-15E Strike Eagle",
       "maker": "McDonnell Douglas",
       "img": "f15e.jpg",
       "genspecs": [ "2", "63ft 9in", "42ft 10in", "18ft 6in", "608 sq ft", "31,700 lb", "31,700 lb", "81,000 lb", "13,550 lb", "2x PW F100-PW-220" ],
-      "perf": [ "1,434 kn", "n/a", "n/a", "687 nm", "2,100 nm", "60,000 ft", "+9", "n/a", "50,000 ft/min", "0.93" ]
+      "perf": [ "1,434 kn", "n/a", "n/a", "687 nm", "2,100 nm", "60,000 ft", "+9.0", "n/a", "50,000 ft/min", "0.93" ]
     }
   ],
-  
+
   "Bomber": [
     {
       "name": "B-2 Spirit",
@@ -61,7 +61,7 @@
       "img": "b2.jpg",
       "genspecs": [ "2", "69ft", "172ft", "17ft", "5,140 sq ft", "158,000 lb", "336,500 lb", "376,000 lb", "167,000 lb", "4x GE-F118" ],
       "perf": [ "550 kn", "487 kn", "n/a", "6,900 nm", "n/a", "50,000 ft", "n/a", "n/a", "n/a", "0.205" ]
-      
+
     },
     {
       "name": "Tu-160",
@@ -69,6 +69,16 @@
       "img": "tu160.jpg",
       "genspecs": [ "4", "177ft 6in", "182ft 9in", "43ft", "4,300 sq ft", "242,508 lb", "267,600 lb", "606,271 lb", "352,739 lb", "4x Samara NK-321" ],
       "perf": [ "1,200 kn", "520 kn", "n/a", "1,100 nm", "n/a", "52,000 ft", "n/a", "n/a", "14,000 ft/min", "0.37" ]
+    }
+  ],
+
+  "Stealth": [
+    {
+      "name": "F-35 Lightning II",
+      "maker": "Lockheed Martin",
+      "img": "f35.jpg",
+      "genspecs": [ "1", "51 ft", "35 ft", "14 ft", "460 sq ft", "29,300 lb", "49,540 lb", "70,000 lb", "18,250 lb", "1X PW F135-PW-100" ],
+      "perf": [ "n/a", "n/a", "n/a", "760 nm", "n/a", "50,000 ft", "+9.0", "n/a", "n/a", "0.87" ]
     }
   ]
 }
