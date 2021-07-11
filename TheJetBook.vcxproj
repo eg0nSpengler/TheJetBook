@@ -172,7 +172,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Content_4aircraft_1json__JsonSchema="testschema.json" Content_4testaircraft_1json__JsonSchema="schema.json" />
+      <UserProperties Content_4aircraft_1json__JsonSchema="schema.json" Content_4testaircraft_1json__JsonSchema="schema.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -10,7 +10,7 @@ UIEngine::UIEngine()
 	numRows = 10;
 	tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Internal fuel capacity", "Engine(s)" };
 	tableTwo = { "Maximum speed", "Cruise speed", "Stall speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "T/W ratio" };
-	rightPanelOptions = { "Role", "Nation", "Manufacturer", "First flight", "Service introduction" };
+	rightPanelOptions = { "Role", "Nation", "Manufacturer", "First flight", "Service introduction", "Number built", "Operational status", "NATO designation/nickname"};
 	sf::Texture tmpTexture;
 	tmpTexture.loadFromFile(imgFilePath + "noac.jpg");
 	noSelectionTexture = std::make_shared<sf::Texture>(tmpTexture);

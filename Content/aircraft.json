@@ -5,21 +5,21 @@
       "img": "a10.jpg",
       "genspecs": [ "1", "53ft 4in", "57ft 6in", "14ft 8in", "506 sq ft", "24,959 lb", "30,384 lb", "50,000 lb", "11,000 lb", "2x GE TF34-GE-100A" ],
       "perf": [ "381 kn", "300 kn", "120 kn", "252 nm", "2,240 nm", "45,000 ft", "n/a", "n/a", "6,000ft/min", "0.36" ],
-      "details": ["Close air support", "United States", "Fairchild Republic", "May 10th 1972", "October 1977"]
+      "details": ["Close air support", "United States", "Fairchild Republic", "May 10th 1972", "October 1977", "716", "In service", "Warthog/Hog"]
     },
     {
       "name": "Su-25",
       "img": "su25.jpg",
       "genspecs": [ "1", "50ft 11in", "47ft 1in", "15ft 9in", "363 sq ft", "21,605 lb", "31,835 lb", "42,549 lb", "8,312 lb", "2x Tumansky R-195" ],
       "perf": [ "526 kn", "n/a", "n/a", "400 nm", "4,050 nm", "23,000 ft", "+6.5", "n/a", "11,400ft/min", "0.69" ],
-      "details": ["Close air support", "Soviet Union/Russia", "Sukhoi", "February 22nd 1975", "July 19th 1981"]
+      "details": [ "Close air support", "Soviet Union/Russia", "Sukhoi", "February 22nd 1975", "July 19th 1981", "1,000+", "In service", "Frogfoot/Grach"]
     },
     {
       "name": "37 Viggen",
       "img": "viggen.jpg",
       "genspecs": [ "1", "53ft 10in", "34ft 9in", "19ft 4in", "500 sq ft", "20,944 lb", "37,479 lb", "42,492 lb", "12,568 lb", "1x Volvo RM8B" ],
       "perf": [ "1,205 kn", "n/a", "n/a", "n/a", "980 nm", "59,000 ft", "n/a", "n/a", "40,000 ft/min", "0.79" ],
-      "details": ["Attack/Fighter/Recon", "Sweden", "Saab", "February 8th 1967", "June 21st 1971"]
+      "details": [ "Attack/Fighter/Recon", "Sweden", "Saab", "February 8th 1967", "June 21st 1971", "329", "Retired as of June 26th 2007", "n/a"]
     }
   ],
 
@@ -29,28 +29,49 @@
       "img": "f16.jpg",
       "genspecs": [ "1", "49ft 5in", "32ft 8in", "16ft", "300 sq ft", "18,900 lb", "26,500 lb", "42,300 lb", "7,000 lb", "1x PW F100-PW-229" ],
       "perf": [ "1,145 kn", "400 kn", "150 kn", "295 nm", "2,277 nm", "60,000 ft", "+9.0", "324deg/s", "72,000 ft/min", "1.095" ],
-      "details": [ "Multirole/Air superiority", "United States", "General Dynamics", "February 2nd 1974", "August 17th 1978" ]
+      "details": [ "Multirole/Air superiority", "United States", "General Dynamics", "February 2nd 1974", "August 17th 1978", "4,604", "In service", "Viper"]
     },
     {
       "name": "MiG-29",
       "img": "mig29.jpg",
       "genspecs": [ "1", "56ft 10in", "37ft 3in", "15ft 6in", "410 sq ft", "24,251 lb", "32,849 lb", "39,683 lb", "7,716 lb", "2x Klimov RD-33" ],
       "perf": [ "1,300 kn", "n/a", "n/a", "770 nm", "n/a", "59,000 ft", "+9.0", "n/a", "65,000 ft/min", "1.09" ],
-      "details": ["Multirole/Air superiority", "Soviet Union/Russia", "Mikoyan", "October 6th 1977", "July 1982"]
+      "details": [ "Multirole/Air superiority", "Soviet Union/Russia", "Mikoyan", "October 6th 1977", "July 1982", "1,600+", "In service", "Fulcrum" ]
     },
     {
       "name": "F-15 Eagle",
       "img": "f15c.jpg",
       "genspecs": [ "1", "63ft 9in", "42ft 10in", "18ft 6in", "608 sq ft", "28,000 lb", "44,500 lb", "68,000 lb", "13,455 lb", "2x PW F100-PW-220" ],
       "perf": [ "800 kn", "n/a", "n/a", "n/a", "n/a", "65,000 ft", "+9.0", "n/a", "67,050 ft/min", "1.07" ],
-      "details": ["Air superiority", "United States", "McDonnell Douglas", "July 27th 1972", "January 9nd 1976"]
+      "details": [ "Air superiority", "United States", "McDonnell Douglas", "July 27th 1972", "January 9nd 1976", "1,198", "In service", "n/a"]
     },
     {
       "name": "F-15E Strike Eagle",
       "img": "f15e.jpg",
       "genspecs": [ "2", "63ft 9in", "42ft 10in", "18ft 6in", "608 sq ft", "31,700 lb", "31,700 lb", "81,000 lb", "13,550 lb", "2x PW F100-PW-220" ],
       "perf": [ "1,434 kn", "n/a", "n/a", "687 nm", "2,100 nm", "60,000 ft", "+9.0", "n/a", "50,000 ft/min", "0.93" ],
-      "details": ["Multirole/Strike", "United States", "McDonnell Douglas", "December 11th 1986", "September 30th 1989"]
+      "details": [ "Multirole/Strike", "United States", "McDonnell Douglas", "December 11th 1986", "September 30th 1989", "513", "In service", "Mudhen" ]
+    },
+    {
+      "name": "F-14 Tomcat",
+      "img": "f14.jpg",
+      "genspecs": [ "2", "62ft 9in", "64ft 1.5in", "16ft", "565 sq ft", "43,735 lb", "61,000 lb", "74,350 lb", "16,200 lb", "2x GE F110-GE-400" ],
+      "perf": [ "1,506 kn", "n/a", "n/a", "500 nm", "n/a", "53,000 ft", "+7.5", "n/a", "45,000 ft/min", "0.92" ],
+      "details": [ "Interceptor/Air superiority/Multirole", "United States", "Grumman Aerospace Corporation", "December 21st 1970", "September 22nd 1974", "712", "Retired from US Navy as of September 22nd 2006, still in service with Iranian Air Force", "n/a" ]
+    },
+    {
+      "name": "MiG-21",
+      "img": "mig21.jpg",
+      "genspecs": [ "1", "48ft 3in", "23ft 6in", "13ft 5in", "250 sq ft", "11,460 lb", "19,235 lb", "19,401 lb", "3,652 lb", "1x Tumansky R-25-300" ],
+      "perf": [ "1,174 kn", "n/a", "n/a", "360 nm", "n/a", "57,400 ft", "n/a", "n/a", "n/a", "0.76" ],
+      "details": [ "Interceptor", "Soviet Union/Russia", "Mikoyan", "June 16th 1955", "1959", "11,496", "In service", "Fishbed" ]
+    },
+    {
+      "name": "MiG-31",
+      "img": "mig31.jpg",
+      "genspecs": [ "2", "74ft 3in", "44ft 2in", "21ft 2in", "663 sq ft", "48,105 lb", "90,390 lb", "101,854 lb", "35,550 lb", "2x Soloviev D-30F6" ],
+      "perf": [ "1,600 kn", "1,300 kn", "n/a", "780 nm", "n/a", "82,000 ft", "+5.0", "n/a", "56,700 ft/min", "0.85" ],
+      "details": [ "Interceptor", "Soviet Union/Russia", "Mikoyan", "September 16th 1975", "May 6th 1981", "519", "In service", "Foxhound" ]
     }
   ],
 
@@ -60,7 +81,7 @@
       "img": "b2.jpg",
       "genspecs": [ "2", "69ft", "172ft", "17ft", "5,140 sq ft", "158,000 lb", "336,500 lb", "376,000 lb", "167,000 lb", "4x GE-F118" ],
       "perf": [ "550 kn", "487 kn", "n/a", "6,900 nm", "n/a", "50,000 ft", "n/a", "n/a", "n/a", "0.205" ],
-      "details": [ "Stealth strategic heavy bomber", "United States", "Northrop Gruman", "July 17th 1989", "January 1st 1997"]
+      "details": [ "Stealth strategic heavy bomber", "United States", "Northrop Gruman", "July 17th 1989", "January 1st 1997", "21", "In service", "n/a"]
 
     },
     {
@@ -68,7 +89,14 @@
       "img": "tu160.jpg",
       "genspecs": [ "4", "177ft 6in", "182ft 9in", "43ft", "4,300 sq ft", "242,508 lb", "267,600 lb", "606,271 lb", "352,739 lb", "4x Samara NK-321" ],
       "perf": [ "1,200 kn", "520 kn", "n/a", "1,100 nm", "n/a", "52,000 ft", "n/a", "n/a", "14,000 ft/min", "0.37" ],
-      "details": [ "Supersonic strategic heavy bomber", "Soviet Union/Russia", "Tupolev", "December 18th 1981", "April 1987"]
+      "details": [ "Supersonic strategic heavy bomber", "Soviet Union/Russia", "Tupolev", "December 18th 1981", "April 1987", "36", "In service", "Blackjack/Belyy Lebed" ]
+    },
+    {
+      "name": "Tu-22M",
+      "img": "tu22m.jpg",
+      "genspecs": [ "4", "139ft 4in", "112ft 6in", "36ft 3in", "1,976 sq ft", "127,868 lb", "246,918 lb", "277,782 lb", "119,050 lb", "2x Kuznetsov NK-25" ],
+      "perf": [ "1,253 kn", "n/a", "n/a", "1,300 nm", "3,800", "43,600 ft", "n/a", "n/a", "3,000 ft/min", "0.45" ],
+      "details": [ "Strategic bomber/Maritime strike", "Soviet Union/Russia", "Tupolev", "August 30th 1969", "1972", "497", "In service", "Backfire" ]
     }
   ],
 
@@ -78,7 +106,21 @@
       "img": "f35.jpg",
       "genspecs": [ "1", "51 ft", "35 ft", "14 ft", "460 sq ft", "29,300 lb", "49,540 lb", "70,000 lb", "18,250 lb", "1X PW F135-PW-100" ],
       "perf": [ "n/a", "n/a", "n/a", "760 nm", "n/a", "50,000 ft", "+9.0", "n/a", "n/a", "0.87" ],
-      "details": [ "Stealth multirole", "United States", "Lockheed Martin", "December 15th 2006", "July 31st 2015 (F-35B)"]
+      "details": [ "Stealth multirole", "United States", "Lockheed Martin", "December 15th 2006", "July 31st 2015 (F-35B)", "665+", "In service", "n/a" ]
+    },
+    {
+      "name": "F-22 Raptor",
+      "img": "f22.jpg",
+      "genspecs": [ "1", "62 ft 1in", "44 ft 6in", "16ft 8in", "840 sq ft", "43,340 lb", "64,840 lb", "83,500 lb", "18,000 lb", "2X PW F119-PW-100" ],
+      "perf": [ "1,448 kn", "n/a", "n/a", "460 nm", "1,740 nm", "65,000 ft", "+9.0", "n/a", "n/a", "1.08" ],
+      "details": [ "Stealth air superiority", "United States", "Lockheed Martin/Boeing", "September 7th 1997", "December 15th 2005", "195", "In service", "n/a" ]
+    },
+    {
+      "name": "Su-57",
+      "img": "su57.jpg",
+      "genspecs": [ "1", "65 ft 11in", "46 ft 3in", "15ft 1in", "848 sq ft", "39,683 lb", "55,116 lb", "77,162 lb", "22,700 lb", "2X Saturn AL-41F1" ],
+      "perf": [ "1,330 kn", "n/a", "n/a", "n/a", "n/a", "66,000 ft", "+9.0", "n/a", "n/a", "1.02" ],
+      "details": [ "Stealth multirole", "Russia", "Sukhoi", "January 29th 2010", "December 25th 2020", "12", "In service", "Felon" ]
     }
   ]
 }
