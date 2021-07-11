@@ -10,6 +10,7 @@ UIEngine::UIEngine()
 	numRows = 10;
 	tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Internal fuel capacity", "Engine(s)" };
 	tableTwo = { "Maximum speed", "Cruise speed", "Stall speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "T/W ratio" };
+	rightPanelOptions = { "Role", "Nation", "Manufacturer", "First flight", "Service introduction" };
 	sf::Texture tmpTexture;
 	tmpTexture.loadFromFile(imgFilePath + "noac.jpg");
 	noSelectionTexture = std::make_shared<sf::Texture>(tmpTexture);
@@ -21,6 +22,7 @@ void UIEngine::Init()
 {
 	GetAircraftImagesFromJSON();
 	GetAircraftInfoFromJSON();
+	GetAircraftDetails();
 	ShowAircraftSpecs(selectedSpecSheet);
 }
 
@@ -82,7 +84,7 @@ void UIEngine::Run()
 				//and placing it under their respective category
 				for (const auto& item : j[tmp])
 				{
-					
+
 					std::string tmpName = item["name"]; //aircraft name
 					std::string tmpImg = item["img"]; //aircraft image
 
@@ -95,6 +97,7 @@ void UIEngine::Run()
 						currentAircraft = tmpC;
 						ShowAircraftImage();
 						ShowAircraftSpecs(selectedSpecSheet);
+						GetAircraftDetails();
 						std::cout << currentAircraft << '\n';
 
 					}
@@ -152,7 +155,7 @@ void UIEngine::Run()
 					break;
 				case 2:
 					selectedTable = 2;
-					selectedSpecSheet = SPEC_TYPE::AVI;
+					selectedSpecSheet = SPEC_TYPE::GEN;
 					break;
 				default:
 					break;
@@ -186,8 +189,22 @@ void UIEngine::Run()
 		ImGui::EndChild();
 
 		ImGui::SetCursorPos(newCursorPos);
+
+
 		/*BEGIN RIGHT PANEL*/
-		ImGui::BeginChild("RIGHTPANE", ImVec2(LEFT_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT), true, ImGuiWindowFlags_NoNavInputs);
+		if (ImGui::BeginChild("RIGHTPANE", ImVec2(LEFT_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT), true, ImGuiWindowFlags_NoNavInputs))
+		{
+
+			for (auto i = 0; i < rightPanelOptions.size(); i++)
+			{
+				if (ImGui::CollapsingHeader(rightPanelOptions.at(i), ImGuiTreeNodeFlags_Leaf))
+				{ 
+					ImGui::TextWrapped(currentDetails.at(i));
+				}
+			}
+			
+		}
+
 		/*END RIGHT PANEL*/
 		ImGui::EndChild();
 
@@ -273,6 +290,13 @@ void UIEngine::GetAircraftInfoFromJSON()
 
 				aircraftPerfData.insert(std::pair<std::string, std::string>(nameTmp, perfSpecTmp));
 			}
+
+
+			for (const auto& detailSpec : item["details"])
+			{
+				std::string detailSpecTmp = detailSpec;
+				aircraftDetailData.insert(std::pair<std::string, std::string>(nameTmp, detailSpecTmp));
+			}
 		}
 
 	}
@@ -311,7 +335,8 @@ void UIEngine::ShowAircraftSpecs(SPEC_TYPE type)
 	case SPEC_TYPE::PERF:
 		GetAircraftSpecs(aircraftPerfData);
 		break;
-	case SPEC_TYPE::AVI:
+	case SPEC_TYPE::DETAIL:
+		GetAircraftSpecs(aircraftDetailData);
 		break;
 	default:
 		break;
@@ -338,5 +363,22 @@ void UIEngine::GetAircraftSpecs(const std::multimap<std::string, std::string>& m
 			//to be displayed on the spec sheet
 			currentData.push_back(tmp);
 		}
+	}
+}
+
+void UIEngine::GetAircraftDetails()
+{
+	if (currentDetails.size() > 0)
+	{
+		currentDetails.clear();
+	}
+
+	auto range = aircraftDetailData.equal_range(currentAircraft);
+	
+	for (auto i = range.first; i != range.second; ++i)
+	{
+		auto tmp = i->second.c_str();
+
+		currentDetails.push_back(tmp);
 	}
 }

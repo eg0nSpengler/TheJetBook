@@ -29,9 +29,9 @@ class UIEngine
 		/// </summary>
 		PERF,
 		/// <summary>
-		/// Avionic systems
+		/// Details
 		/// </summary>
-		AVI
+		DETAIL
 	};
 
 public:
@@ -42,6 +42,7 @@ public:
 	void GetAircraftInfoFromJSON();
 	void ShowAircraftSpecs(SPEC_TYPE type);
 	void GetAircraftSpecs(const std::multimap<std::string, std::string>& map);
+	void GetAircraftDetails();
 	const sf::Sprite& ShowAircraftImage();
 
 private:
@@ -61,13 +62,19 @@ private:
 	/// </summary>
 	std::multimap<std::string, std::string> aircraftPerfData;
 	/// <summary>
-	/// Contains avionic system(s) data for aircraft
+	/// Contains details(nation/maker/etc) for aircraft
 	/// </summary>
-	std::multimap<std::string, std::string> aircraftAviData;
+	std::multimap<std::string, std::string> aircraftDetailData;
 	std::map<std::string, sf::Sprite> aircraftImages;
 	std::vector<std::shared_ptr<sf::Texture>> imgTextures;
 	std::vector<std::vector<const char*>> tableOptions;
+	/// <summary>
+	/// These all contain const char* since if we set these to contain std::strings instead
+	/// I'd end up having to do a string conversion for each element before applying them to ImGui objects...
+	/// </summary>
+	std::vector<const char*> rightPanelOptions;
 	std::vector<const char*> currentData;
+	std::vector<const char*> currentDetails;
 	std::vector<const char*> tableOne;
 	std::vector<const char*> tableTwo;
 

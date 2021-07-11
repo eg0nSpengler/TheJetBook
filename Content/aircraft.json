@@ -2,83 +2,83 @@
   "Attack": [
     {
       "name": "A-10 Thunderbolt II",
-      "maker": "Fairchild Republic",
       "img": "a10.jpg",
       "genspecs": [ "1", "53ft 4in", "57ft 6in", "14ft 8in", "506 sq ft", "24,959 lb", "30,384 lb", "50,000 lb", "11,000 lb", "2x GE TF34-GE-100A" ],
-      "perf": [ "381 kn", "300 kn", "120 kn", "252 nm", "2,240 nm", "45,000 ft", "n/a", "n/a", "6,000ft/min", "0.36" ]
+      "perf": [ "381 kn", "300 kn", "120 kn", "252 nm", "2,240 nm", "45,000 ft", "n/a", "n/a", "6,000ft/min", "0.36" ],
+      "details": ["Close air support", "United States", "Fairchild Republic", "May 10th 1972", "October 1977"]
     },
     {
       "name": "Su-25",
-      "maker": "Sukhoi",
       "img": "su25.jpg",
       "genspecs": [ "1", "50ft 11in", "47ft 1in", "15ft 9in", "363 sq ft", "21,605 lb", "31,835 lb", "42,549 lb", "8,312 lb", "2x Tumansky R-195" ],
-      "perf": [ "526 kn", "n/a", "n/a", "400 nm", "4,050 nm", "23,000 ft", "+6.5", "n/a", "11,400ft/min", "0.69" ]
+      "perf": [ "526 kn", "n/a", "n/a", "400 nm", "4,050 nm", "23,000 ft", "+6.5", "n/a", "11,400ft/min", "0.69" ],
+      "details": ["Close air support", "Soviet Union/Russia", "Sukhoi", "February 22nd 1975", "July 19th 1981"]
     },
     {
       "name": "37 Viggen",
-      "maker": "Saab",
       "img": "viggen.jpg",
       "genspecs": [ "1", "53ft 10in", "34ft 9in", "19ft 4in", "500 sq ft", "20,944 lb", "37,479 lb", "42,492 lb", "12,568 lb", "1x Volvo RM8B" ],
-      "perf": [ "1,205 kn", "n/a", "n/a", "n/a", "980 nm", "59,000 ft", "n/a", "n/a", "40,000 ft/min", "0.79" ]
+      "perf": [ "1,205 kn", "n/a", "n/a", "n/a", "980 nm", "59,000 ft", "n/a", "n/a", "40,000 ft/min", "0.79" ],
+      "details": ["Attack/Fighter/Recon", "Sweden", "Saab", "February 8th 1967", "June 21st 1971"]
     }
   ],
 
   "Fighter": [
     {
       "name": "F-16 Fighting Falcon",
-      "maker": "General Dynamics",
       "img": "f16.jpg",
       "genspecs": [ "1", "49ft 5in", "32ft 8in", "16ft", "300 sq ft", "18,900 lb", "26,500 lb", "42,300 lb", "7,000 lb", "1x PW F100-PW-229" ],
-      "perf": [ "1,145 kn", "400 kn", "150 kn", "295 nm", "2,277 nm", "60,000 ft", "+9.0", "324deg/s", "72,000 ft/min", "1.095" ]
+      "perf": [ "1,145 kn", "400 kn", "150 kn", "295 nm", "2,277 nm", "60,000 ft", "+9.0", "324deg/s", "72,000 ft/min", "1.095" ],
+      "details": [ "Multirole/Air superiority", "United States", "General Dynamics", "February 2nd 1974", "August 17th 1978" ]
     },
     {
       "name": "MiG-29",
-      "maker": "Mikoyan",
       "img": "mig29.jpg",
       "genspecs": [ "1", "56ft 10in", "37ft 3in", "15ft 6in", "410 sq ft", "24,251 lb", "32,849 lb", "39,683 lb", "7,716 lb", "2x Klimov RD-33" ],
-      "perf": [ "1,300 kn", "n/a", "n/a", "770 nm", "n/a", "59,000 ft", "+9.0", "n/a", "65,000 ft/min", "1.09" ]
+      "perf": [ "1,300 kn", "n/a", "n/a", "770 nm", "n/a", "59,000 ft", "+9.0", "n/a", "65,000 ft/min", "1.09" ],
+      "details": ["Multirole/Air superiority", "Soviet Union/Russia", "Mikoyan", "October 6th 1977", "July 1982"]
     },
     {
       "name": "F-15 Eagle",
-      "maker": "McDonnell Douglas",
       "img": "f15c.jpg",
       "genspecs": [ "1", "63ft 9in", "42ft 10in", "18ft 6in", "608 sq ft", "28,000 lb", "44,500 lb", "68,000 lb", "13,455 lb", "2x PW F100-PW-220" ],
-      "perf": [ "800 kn", "n/a", "n/a", "n/a", "n/a", "65,000 ft", "+9.0", "n/a", "67,050 ft/min", "1.07" ]
+      "perf": [ "800 kn", "n/a", "n/a", "n/a", "n/a", "65,000 ft", "+9.0", "n/a", "67,050 ft/min", "1.07" ],
+      "details": ["Air superiority", "United States", "McDonnell Douglas", "July 27th 1972", "January 9nd 1976"]
     },
     {
       "name": "F-15E Strike Eagle",
-      "maker": "McDonnell Douglas",
       "img": "f15e.jpg",
       "genspecs": [ "2", "63ft 9in", "42ft 10in", "18ft 6in", "608 sq ft", "31,700 lb", "31,700 lb", "81,000 lb", "13,550 lb", "2x PW F100-PW-220" ],
-      "perf": [ "1,434 kn", "n/a", "n/a", "687 nm", "2,100 nm", "60,000 ft", "+9.0", "n/a", "50,000 ft/min", "0.93" ]
+      "perf": [ "1,434 kn", "n/a", "n/a", "687 nm", "2,100 nm", "60,000 ft", "+9.0", "n/a", "50,000 ft/min", "0.93" ],
+      "details": ["Multirole/Strike", "United States", "McDonnell Douglas", "December 11th 1986", "September 30th 1989"]
     }
   ],
 
   "Bomber": [
     {
       "name": "B-2 Spirit",
-      "maker": "Northrop Gruman",
       "img": "b2.jpg",
       "genspecs": [ "2", "69ft", "172ft", "17ft", "5,140 sq ft", "158,000 lb", "336,500 lb", "376,000 lb", "167,000 lb", "4x GE-F118" ],
-      "perf": [ "550 kn", "487 kn", "n/a", "6,900 nm", "n/a", "50,000 ft", "n/a", "n/a", "n/a", "0.205" ]
+      "perf": [ "550 kn", "487 kn", "n/a", "6,900 nm", "n/a", "50,000 ft", "n/a", "n/a", "n/a", "0.205" ],
+      "details": [ "Stealth strategic heavy bomber", "United States", "Northrop Gruman", "July 17th 1989", "January 1st 1997"]
 
     },
     {
       "name": "Tu-160",
-      "maker": "Tupolev",
       "img": "tu160.jpg",
       "genspecs": [ "4", "177ft 6in", "182ft 9in", "43ft", "4,300 sq ft", "242,508 lb", "267,600 lb", "606,271 lb", "352,739 lb", "4x Samara NK-321" ],
-      "perf": [ "1,200 kn", "520 kn", "n/a", "1,100 nm", "n/a", "52,000 ft", "n/a", "n/a", "14,000 ft/min", "0.37" ]
+      "perf": [ "1,200 kn", "520 kn", "n/a", "1,100 nm", "n/a", "52,000 ft", "n/a", "n/a", "14,000 ft/min", "0.37" ],
+      "details": [ "Supersonic strategic heavy bomber", "Soviet Union/Russia", "Tupolev", "December 18th 1981", "April 1987"]
     }
   ],
 
   "Stealth": [
     {
       "name": "F-35 Lightning II",
-      "maker": "Lockheed Martin",
       "img": "f35.jpg",
       "genspecs": [ "1", "51 ft", "35 ft", "14 ft", "460 sq ft", "29,300 lb", "49,540 lb", "70,000 lb", "18,250 lb", "1X PW F135-PW-100" ],
-      "perf": [ "n/a", "n/a", "n/a", "760 nm", "n/a", "50,000 ft", "+9.0", "n/a", "n/a", "0.87" ]
+      "perf": [ "n/a", "n/a", "n/a", "760 nm", "n/a", "50,000 ft", "+9.0", "n/a", "n/a", "0.87" ],
+      "details": [ "Stealth multirole", "United States", "Lockheed Martin", "December 15th 2006", "July 31st 2015 (F-35B)"]
     }
   ]
 }
