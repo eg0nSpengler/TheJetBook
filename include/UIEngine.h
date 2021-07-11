@@ -29,9 +29,9 @@ class UIEngine
 		/// </summary>
 		PERF,
 		/// <summary>
-		/// Details
+		/// Avionics
 		/// </summary>
-		DETAIL
+		AVI
 	};
 
 public:
@@ -62,6 +62,10 @@ private:
 	/// </summary>
 	std::multimap<std::string, std::string> aircraftPerfData;
 	/// <summary>
+	/// Contains avionic data for aircraft
+	/// </summary>
+	std::multimap<std::string, std::string> aircraftAvionicData;
+	/// <summary>
 	/// Contains details(nation/maker/etc) for aircraft
 	/// </summary>
 	std::multimap<std::string, std::string> aircraftDetailData;
@@ -75,6 +79,7 @@ private:
 	std::vector<const char*> rightPanelOptions;
 	std::vector<const char*> currentData;
 	std::vector<const char*> currentDetails;
+	std::vector<const char*> currentAvionics;
 	std::vector<const char*> tableOne;
 	std::vector<const char*> tableTwo;
 

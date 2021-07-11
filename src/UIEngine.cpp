@@ -10,7 +10,7 @@ UIEngine::UIEngine()
 	numRows = 10;
 	tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Internal fuel capacity", "Engine(s)" };
 	tableTwo = { "Maximum speed", "Cruise speed", "Stall speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "T/W ratio" };
-	rightPanelOptions = { "Role", "Nation", "Manufacturer", "First flight", "Service introduction", "Number built", "Operational status", "NATO designation/nickname"};
+	rightPanelOptions = { "Role", "Nation", "Manufacturer", "First flight", "Service introduction", "Number built", "Operational status", "NATO designation/nickname", "Avionics"};
 	sf::Texture tmpTexture;
 	tmpTexture.loadFromFile(imgFilePath + "noac.jpg");
 	noSelectionTexture = std::make_shared<sf::Texture>(tmpTexture);
@@ -33,7 +33,7 @@ void UIEngine::Run()
 
 	ImGui::SFML::Init(window);
 
-	sf::Color bgColor = sf::Color::Cyan;
+	sf::Color bgColor = sf::Color::Transparent;
 	float color[3] = { 0.f, 0.f, 0.f };
 
 	window.resetGLStates();
@@ -64,12 +64,18 @@ void UIEngine::Run()
 
 		ImGui::SetNextWindowSize(ImVec2(PARENT_WINDOW_WIDTH, PARENT_WINDOW_HEIGHT), ImGuiCond_Once);
 		ImGui::Begin(PARENT_WINDOW_TITLE, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove);
+
+		//So we only show the demo window if we're in DEBUG config
+#if defined _DEBUG
 		ImGui::ShowDemoWindow();
+#else
+#endif
 
 		/*BEGIN LEFT PANEL*/
 		ImGui::BeginChild("LEFTPANE", ImVec2(LEFT_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT), true, ImGuiWindowFlags_NoNavInputs);
 
 		static bool isSelected = false;
+
 		//getting each aircraft category
 		for (const auto& elem : j.items())
 		{
@@ -98,7 +104,10 @@ void UIEngine::Run()
 						ShowAircraftImage();
 						ShowAircraftSpecs(selectedSpecSheet);
 						GetAircraftDetails();
+#if defined _DEBUG
 						std::cout << currentAircraft << '\n';
+#else
+#endif
 
 					}
 
@@ -141,7 +150,7 @@ void UIEngine::Run()
 			}
 
 			//setting up dropdown box
-			if (ImGui::Combo(" ", &currentItem,"General characteristics\0Performance"))
+			if (ImGui::Combo(" ", &currentItem,"General characteristics\0Performance\0"))
 			{
 				switch (currentItem)
 				{
@@ -152,10 +161,6 @@ void UIEngine::Run()
 				case 1:
 					selectedTable = 1;
 					selectedSpecSheet = SPEC_TYPE::PERF;
-					break;
-				case 2:
-					selectedTable = 2;
-					selectedSpecSheet = SPEC_TYPE::GEN;
 					break;
 				default:
 					break;
@@ -195,11 +200,22 @@ void UIEngine::Run()
 		if (ImGui::BeginChild("RIGHTPANE", ImVec2(LEFT_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT), true, ImGuiWindowFlags_NoNavInputs))
 		{
 
-			for (auto i = 0; i < rightPanelOptions.size(); i++)
+			//Minus one since the last element is for avionics
+			for (auto i = 0; i < rightPanelOptions.size() - 1; i++)
 			{
 				if (ImGui::CollapsingHeader(rightPanelOptions.at(i), ImGuiTreeNodeFlags_Leaf))
 				{ 
 					ImGui::TextWrapped(currentDetails.at(i));
+				}
+			}
+
+			//back() provides a reference to the last element in the container
+			//so no need to pass an index or iterate here
+			if (ImGui::CollapsingHeader(rightPanelOptions.back(), ImGuiTreeNodeFlags_Leaf))
+			{
+				for (const auto& avionic : currentAvionics)
+				{
+					ImGui::TextWrapped(avionic);
 				}
 			}
 			
@@ -291,6 +307,12 @@ void UIEngine::GetAircraftInfoFromJSON()
 				aircraftPerfData.insert(std::pair<std::string, std::string>(nameTmp, perfSpecTmp));
 			}
 
+			for (const auto& aviSpec : item["avi"])
+			{
+				std::string aviSpecTmp = aviSpec;
+
+				aircraftAvionicData.insert(std::pair<std::string, std::string>(nameTmp, aviSpecTmp));
+			}
 
 			for (const auto& detailSpec : item["details"])
 			{
@@ -316,6 +338,7 @@ const sf::Sprite& UIEngine::ShowAircraftImage()
 		return aircraftImages.at(currentAircraft);
 	}
 
+	return aircraftImages.at(0);
 }
 
 void UIEngine::ShowAircraftSpecs(SPEC_TYPE type)
@@ -335,8 +358,8 @@ void UIEngine::ShowAircraftSpecs(SPEC_TYPE type)
 	case SPEC_TYPE::PERF:
 		GetAircraftSpecs(aircraftPerfData);
 		break;
-	case SPEC_TYPE::DETAIL:
-		GetAircraftSpecs(aircraftDetailData);
+	case SPEC_TYPE::AVI:
+		GetAircraftSpecs(aircraftAvionicData);
 		break;
 	default:
 		break;
@@ -368,9 +391,10 @@ void UIEngine::GetAircraftSpecs(const std::multimap<std::string, std::string>& m
 
 void UIEngine::GetAircraftDetails()
 {
-	if (currentDetails.size() > 0)
+	if (currentDetails.size() > 0 && currentAvionics.size() > 0)
 	{
 		currentDetails.clear();
+		currentAvionics.clear();
 	}
 
 	auto range = aircraftDetailData.equal_range(currentAircraft);
@@ -380,5 +404,14 @@ void UIEngine::GetAircraftDetails()
 		auto tmp = i->second.c_str();
 
 		currentDetails.push_back(tmp);
+	}
+
+	range = aircraftAvionicData.equal_range(currentAircraft);
+
+	for (auto i = range.first; i != range.second; ++i)
+	{
+		auto tmp = i->second.c_str();
+
+		currentAvionics.push_back(tmp);
 	}
 }
