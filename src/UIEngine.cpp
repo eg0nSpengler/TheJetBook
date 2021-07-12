@@ -20,6 +20,7 @@ UIEngine::UIEngine()
 
 void UIEngine::Init()
 {
+	SetupAudio();
 	GetAircraftImagesFromJSON();
 	GetAircraftInfoFromJSON();
 	GetAircraftDetails();
@@ -64,10 +65,12 @@ void UIEngine::Run()
 
 		ImGui::SetNextWindowSize(ImVec2(PARENT_WINDOW_WIDTH, PARENT_WINDOW_HEIGHT), ImGuiCond_Once);
 		ImGui::Begin(PARENT_WINDOW_TITLE, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove);
+		
 
 		//So we only show the demo window if we're in DEBUG config
 #if defined _DEBUG
 		ImGui::ShowDemoWindow();
+		//ImGui::ShowStyleEditor();
 #else
 #endif
 
@@ -75,6 +78,7 @@ void UIEngine::Run()
 		ImGui::BeginChild("LEFTPANE", ImVec2(LEFT_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT), true, ImGuiWindowFlags_NoNavInputs);
 
 		static bool isSelected = false;
+		static bool shouldPlayHover = false;
 
 		//getting each aircraft category
 		for (const auto& elem : j.items())
@@ -100,15 +104,13 @@ void UIEngine::Run()
 					//creating a selectable element for each aircraft
 					if (ImGui::Selectable(tmpC, isSelected))
 					{
-						currentAircraft = tmpC;
-						ShowAircraftImage();
-						ShowAircraftSpecs(selectedSpecSheet);
-						GetAircraftDetails();
-#if defined _DEBUG
-						std::cout << currentAircraft << '\n';
-#else
-#endif
+							SND_MANAGER->setBuffer(*SND_SELECTAC);
+							SND_MANAGER->play();
 
+							currentAircraft = tmpC;
+							ShowAircraftImage();
+							ShowAircraftSpecs(selectedSpecSheet);
+							GetAircraftDetails();
 					}
 
 				}
@@ -165,6 +167,9 @@ void UIEngine::Run()
 				default:
 					break;
 				}
+
+				SND_MANAGER->setBuffer(*SND_EXPANDCATEGORY);
+				SND_MANAGER->play();
 
 				ShowAircraftSpecs(selectedSpecSheet);
 			}
@@ -234,6 +239,18 @@ void UIEngine::Run()
 
 	ImGui::SFML::Shutdown();
 
+}
+
+void UIEngine::SetupAudio()
+{
+	SND_MANAGER = std::make_unique<sf::Sound>();
+
+	SND_SELECTAC = std::make_shared<sf::SoundBuffer>();
+	SND_EXPANDCATEGORY = std::make_shared<sf::SoundBuffer>();
+	SND_MOUSEOVER = std::make_shared<sf::SoundBuffer>();
+
+	SND_SELECTAC->loadFromFile("./Content/SFX/aaa_on.ogg");
+	SND_EXPANDCATEGORY->loadFromFile("./Content/SFX/arrows.ogg");
 }
 
 void UIEngine::GetAircraftImagesFromJSON()

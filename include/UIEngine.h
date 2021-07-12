@@ -13,6 +13,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Audio.hpp>
 
 #include <nlohmann/json.hpp>
 
@@ -38,6 +39,7 @@ public:
 	UIEngine();
 	void Init();
 	void Run();
+	void SetupAudio();
 	void GetAircraftImagesFromJSON();
 	void GetAircraftInfoFromJSON();
 	void ShowAircraftSpecs(SPEC_TYPE type);
@@ -50,6 +52,7 @@ private:
 	int currentItem;
 	int numRows;
 	SPEC_TYPE selectedSpecSheet;
+
 private:
 	std::string imgFilePath;
 	std::string currentAircraft;
@@ -86,5 +89,11 @@ private:
 private:
 	std::shared_ptr<sf::Texture> noSelectionTexture;
 	std::shared_ptr<sf::Sprite> noSelectionImg;
+
+private:
+	std::unique_ptr<sf::Sound> SND_MANAGER;
+	std::shared_ptr<sf::SoundBuffer> SND_MOUSEOVER;
+	std::shared_ptr<sf::SoundBuffer> SND_EXPANDCATEGORY;
+	std::shared_ptr<sf::SoundBuffer> SND_SELECTAC;
 };
 
