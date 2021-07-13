@@ -153,6 +153,7 @@
     <ClCompile Include="..\..\..\DevLibs\imgui\imgui-1.83\imgui_tables.cpp" />
     <ClCompile Include="..\..\..\DevLibs\imgui\imgui-1.83\imgui_widgets.cpp" />
     <ClCompile Include="..\..\..\DevLibs\imgui\imgui-sfml-2.3\imgui-SFML.cpp" />
+    <ClCompile Include="src\AudioEngine.cpp" />
     <ClCompile Include="src\UIEngine.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -164,6 +165,7 @@
     <None Include="Content\testaircraft.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AudioEngine.h" />
     <ClInclude Include="include\UIDefines.h" />
     <ClInclude Include="include\UIEngine.h" />
   </ItemGroup>

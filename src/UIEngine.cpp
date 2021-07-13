@@ -11,16 +11,22 @@ UIEngine::UIEngine()
 	tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Internal fuel capacity", "Engine(s)" };
 	tableTwo = { "Maximum speed", "Cruise speed", "Stall speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "T/W ratio" };
 	rightPanelOptions = { "Role", "Nation", "Manufacturer", "First flight", "Service introduction", "Number built", "Operational status", "NATO designation/nickname", "Avionics"};
+
+	tableOptions.push_back(tableOne);
+	tableOptions.push_back(tableTwo);
+
+	audioEng = std::make_unique<AudioEngine>();
+
 	sf::Texture tmpTexture;
 	tmpTexture.loadFromFile(imgFilePath + "noac.jpg");
 	noSelectionTexture = std::make_shared<sf::Texture>(tmpTexture);
 	noSelectionImg = std::make_shared<sf::Sprite>(sf::Sprite(*noSelectionTexture));
+
 	Init();
 }
 
 void UIEngine::Init()
 {
-	SetupAudio();
 	GetAircraftImagesFromJSON();
 	GetAircraftInfoFromJSON();
 	GetAircraftDetails();
@@ -64,21 +70,21 @@ void UIEngine::Run()
 		ImGui::SFML::Update(window, deltaTime.restart());
 
 		ImGui::SetNextWindowSize(ImVec2(PARENT_WINDOW_WIDTH, PARENT_WINDOW_HEIGHT), ImGuiCond_Once);
-		ImGui::Begin(PARENT_WINDOW_TITLE, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove);
-		
-
 		//So we only show the demo window if we're in DEBUG config
 #if defined _DEBUG
 		ImGui::ShowDemoWindow();
-		//ImGui::ShowStyleEditor();
+
 #else
 #endif
+
+		ImGui::Begin(PARENT_WINDOW_TITLE, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove);
+		
+		
 
 		/*BEGIN LEFT PANEL*/
 		ImGui::BeginChild("LEFTPANE", ImVec2(LEFT_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT), true, ImGuiWindowFlags_NoNavInputs);
 
 		static bool isSelected = false;
-		static bool shouldPlayHover = false;
 
 		//getting each aircraft category
 		for (const auto& elem : j.items())
@@ -104,10 +110,9 @@ void UIEngine::Run()
 					//creating a selectable element for each aircraft
 					if (ImGui::Selectable(tmpC, isSelected))
 					{
-							SND_MANAGER->setBuffer(*SND_SELECTAC);
-							SND_MANAGER->play();
-
+							audioEng->PlayAudio(AudioEngine::SOUND_TYPE::SELECT_AIRCRAFT);
 							currentAircraft = tmpC;
+
 							ShowAircraftImage();
 							ShowAircraftSpecs(selectedSpecSheet);
 							GetAircraftDetails();
@@ -140,20 +145,19 @@ void UIEngine::Run()
 		if (ImGui::BeginChild("BOTTOMPANE", ImVec2(CENTER_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT / 2), true, ImGuiWindowFlags_NoNavInputs))
 		{
 
-			if (tableOptions.capacity() <= 0)
-			{
-				tableOptions.emplace_back(tableOne);
-				tableOptions.emplace_back(tableTwo);
-			}
-
 			for (auto i = CENTER_PANE_INDENT; i > 0; i--)
 			{
 				ImGui::Indent();
 			}
 
 			//setting up dropdown box
-			if (ImGui::Combo(" ", &currentItem,"General characteristics\0Performance\0"))
+			if (ImGui::Combo(" ", &currentItem,"General characteristics\0Performance\0") || ImGui::IsItemActivated())
 			{
+				if (ImGui::IsItemActivated())
+				{
+					audioEng->PlayAudio(AudioEngine::SOUND_TYPE::SELECT_DROPDOWN_ITEM);
+				}
+
 				switch (currentItem)
 				{
 				case 0:
@@ -167,9 +171,6 @@ void UIEngine::Run()
 				default:
 					break;
 				}
-
-				SND_MANAGER->setBuffer(*SND_EXPANDCATEGORY);
-				SND_MANAGER->play();
 
 				ShowAircraftSpecs(selectedSpecSheet);
 			}
@@ -239,18 +240,6 @@ void UIEngine::Run()
 
 	ImGui::SFML::Shutdown();
 
-}
-
-void UIEngine::SetupAudio()
-{
-	SND_MANAGER = std::make_unique<sf::Sound>();
-
-	SND_SELECTAC = std::make_shared<sf::SoundBuffer>();
-	SND_EXPANDCATEGORY = std::make_shared<sf::SoundBuffer>();
-	SND_MOUSEOVER = std::make_shared<sf::SoundBuffer>();
-
-	SND_SELECTAC->loadFromFile("./Content/SFX/aaa_on.ogg");
-	SND_EXPANDCATEGORY->loadFromFile("./Content/SFX/arrows.ogg");
 }
 
 void UIEngine::GetAircraftImagesFromJSON()

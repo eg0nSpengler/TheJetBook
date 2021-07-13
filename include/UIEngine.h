@@ -1,5 +1,6 @@
 #pragma once
 #include "UIDefines.h"
+#include "AudioEngine.h"
 
 #include <vector>
 #include <iostream>
@@ -13,7 +14,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
-#include <SFML/Audio.hpp>
 
 #include <nlohmann/json.hpp>
 
@@ -39,13 +39,12 @@ public:
 	UIEngine();
 	void Init();
 	void Run();
-	void SetupAudio();
 	void GetAircraftImagesFromJSON();
 	void GetAircraftInfoFromJSON();
 	void ShowAircraftSpecs(SPEC_TYPE type);
 	void GetAircraftSpecs(const std::multimap<std::string, std::string>& map);
 	void GetAircraftDetails();
-	const sf::Sprite& ShowAircraftImage();
+	const sf::Sprite& ShowAircraftImage();	
 
 private:
 	int selectedTable;
@@ -56,6 +55,8 @@ private:
 private:
 	std::string imgFilePath;
 	std::string currentAircraft;
+
+	std::map<std::string, sf::Sprite> aircraftImages;
 	/// <summary>
 	/// Contains general spec data for aircraft
 	/// </summary>
@@ -72,9 +73,6 @@ private:
 	/// Contains details(nation/maker/etc) for aircraft
 	/// </summary>
 	std::multimap<std::string, std::string> aircraftDetailData;
-	std::map<std::string, sf::Sprite> aircraftImages;
-	std::vector<std::shared_ptr<sf::Texture>> imgTextures;
-	std::vector<std::vector<const char*>> tableOptions;
 	/// <summary>
 	/// These all contain const char* since if we set these to contain std::strings instead
 	/// I'd end up having to do a string conversion for each element before applying them to ImGui objects...
@@ -85,15 +83,13 @@ private:
 	std::vector<const char*> currentAvionics;
 	std::vector<const char*> tableOne;
 	std::vector<const char*> tableTwo;
+	std::vector<std::shared_ptr<sf::Texture>> imgTextures;
+	std::vector<std::vector<const char*>> tableOptions;
 
 private:
+	std::unique_ptr<AudioEngine> audioEng;
 	std::shared_ptr<sf::Texture> noSelectionTexture;
 	std::shared_ptr<sf::Sprite> noSelectionImg;
-
-private:
-	std::unique_ptr<sf::Sound> SND_MANAGER;
-	std::shared_ptr<sf::SoundBuffer> SND_MOUSEOVER;
-	std::shared_ptr<sf::SoundBuffer> SND_EXPANDCATEGORY;
-	std::shared_ptr<sf::SoundBuffer> SND_SELECTAC;
+	
 };
 
