@@ -14,6 +14,10 @@ public:
 
 public:
 	AudioEngine();
+	/// <summary>
+	/// Plays audio
+	/// </summary>
+	/// <param name="sfxType">The type of sound effect to play</param>
 	void PlayAudio(SOUND_TYPE sfxType);
 
 private:

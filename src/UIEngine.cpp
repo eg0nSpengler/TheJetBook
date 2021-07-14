@@ -3,34 +3,16 @@
 
 UIEngine::UIEngine()
 {	
-	imgFilePath = "./Content/Images/";
-	selectedSpecSheet = SPEC_TYPE::GEN;
 	selectedTable = 0;
 	currentItem = 0;
-	numRows = 10;
-	tableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Internal fuel capacity", "Engine(s)" };
-	tableTwo = { "Maximum speed", "Cruise speed", "Stall speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "T/W ratio" };
-	rightPanelOptions = { "Role", "Nation", "Manufacturer", "First flight", "Service introduction", "Number built", "Operational status", "NATO designation/nickname", "Avionics"};
 
-	tableOptions.push_back(tableOne);
-	tableOptions.push_back(tableTwo);
+	specTableOne = { "Crew", "Length", "Wingspan", "Height", "Wing area", "Empty weight", "Gross weight", "Max takeoff weight", "Internal fuel capacity", "Engine(s)" };
+	specTableTwo = { "Maximum speed", "Cruise speed", "Stall speed", "Combat range", "Ferry range", "Service ceiling", "g limits", "Roll rate", "Rate of climb", "T/W ratio" };
+	tableOptions.push_back(specTableOne);
+	tableOptions.push_back(specTableTwo);
 
-	audioEng = std::make_unique<AudioEngine>();
-
-	sf::Texture tmpTexture;
-	tmpTexture.loadFromFile(imgFilePath + "noac.jpg");
-	noSelectionTexture = std::make_shared<sf::Texture>(tmpTexture);
-	noSelectionImg = std::make_shared<sf::Sprite>(sf::Sprite(*noSelectionTexture));
-
-	Init();
-}
-
-void UIEngine::Init()
-{
-	GetAircraftImagesFromJSON();
-	GetAircraftInfoFromJSON();
-	GetAircraftDetails();
-	ShowAircraftSpecs(selectedSpecSheet);
+	audioEngine = std::make_unique<AudioEngine>();
+	jsonData = std::make_unique<JSONData>();
 }
 
 void UIEngine::Run()
@@ -46,11 +28,6 @@ void UIEngine::Run()
 	window.resetGLStates();
 
 	sf::Clock deltaTime;
-
-	std::ifstream ifs("Content/aircraft.json");
-
-	nlohmann::json j;
-	ifs >> j;
 
 	auto acStr = " ";
 
@@ -79,49 +56,37 @@ void UIEngine::Run()
 
 		ImGui::Begin(PARENT_WINDOW_TITLE, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove);
 		
-		
 
 		/*BEGIN LEFT PANEL*/
 		ImGui::BeginChild("LEFTPANE", ImVec2(LEFT_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT), true, ImGuiWindowFlags_NoNavInputs);
 
 		static bool isSelected = false;
-
-		//getting each aircraft category
-		for (const auto& elem : j.items())
+		
+		for (const auto& category : jsonData->json->items())
 		{
-			//string conversion
-			std::string tmp = elem.key();
-			auto tmpC = tmp.c_str();
+				//getting each aircraft category
+				auto tmp = category.key();
 
-			//creating a tree node for each category
-			if (ImGui::CollapsingHeader(tmpC, ImGuiTreeNodeFlags_None))
-			{
-				//getting each aircraft from each category
-				//and placing it under their respective category
-				for (const auto& item : j[tmp])
+				//creating a tree node for each category
+				if (ImGui::CollapsingHeader(tmp.c_str(), ImGuiTreeNodeFlags_None))
 				{
-
-					std::string tmpName = item["name"]; //aircraft name
-					std::string tmpImg = item["img"]; //aircraft image
-
-					//string conversion again, so that we can apply it as the Selectable labels
-					auto tmpC = tmpName.c_str();
-
-					//creating a selectable element for each aircraft
-					if (ImGui::Selectable(tmpC, isSelected))
+					//getting each aircraft under each category
+					for (const auto& ac : jsonData->json->at(tmp))
 					{
-							audioEng->PlayAudio(AudioEngine::SOUND_TYPE::SELECT_AIRCRAFT);
-							currentAircraft = tmpC;
+						//getting the aircraft name
+						std::string acName = ac["name"];
 
-							ShowAircraftImage();
-							ShowAircraftSpecs(selectedSpecSheet);
-							GetAircraftDetails();
+						//creating a selectable element for each aircraft
+						if (ImGui::Selectable(acName.c_str(), isSelected))
+						{
+							audioEngine->PlayAudio(AudioEngine::SOUND_TYPE::SELECT_AIRCRAFT);
+							jsonData->SetCurrentAircraft(acName.c_str());
+						}
 					}
-
-				}
-			}
-
+				}	
 		}
+
+		
 
 		/*END LEFT PANEL*/
 		ImGui::EndChild(); ImGui::SameLine();
@@ -131,7 +96,7 @@ void UIEngine::Run()
 		/*BEGIN CENTER PANEL*/
 		if (ImGui::BeginChild("CENTERPANE", ImVec2(CENTER_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT / 2), false, ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
 		{
-			ImGui::Image(ShowAircraftImage());
+			ImGui::Image(jsonData->GetAircraftImage());
 		}
 
 		/*END CENTER PANEL*/
@@ -155,24 +120,24 @@ void UIEngine::Run()
 			{
 				if (ImGui::IsItemActivated())
 				{
-					audioEng->PlayAudio(AudioEngine::SOUND_TYPE::SELECT_DROPDOWN_ITEM);
+					audioEngine->PlayAudio(AudioEngine::SOUND_TYPE::SELECT_DROPDOWN_ITEM);
 				}
 
 				switch (currentItem)
 				{
 				case 0:
 					selectedTable = 0;
-					selectedSpecSheet = SPEC_TYPE::GEN;
+					jsonData->SetSpecSheet(JSONData::SPEC_TYPE::GEN);
 					break;
 				case 1:
 					selectedTable = 1;
-					selectedSpecSheet = SPEC_TYPE::PERF;
+					jsonData->SetSpecSheet(JSONData::SPEC_TYPE::PERF);
 					break;
 				default:
 					break;
 				}
 
-				ShowAircraftSpecs(selectedSpecSheet);
+				jsonData->UpdateSpecSheet();
 			}
 
 			//displaying the table for the corresponding dropdown option 
@@ -185,9 +150,9 @@ void UIEngine::Run()
 					for (auto iy = 0; iy < 1; iy++)
 					{
 						ImGui::TableSetColumnIndex(iy);
-						ImGui::Text(tableOptions.at(selectedTable)[i]);
+						ImGui::Text(tableOptions.at(selectedTable)[i].c_str());
 						ImGui::TableNextColumn();
-						ImGui::Text(currentData.at(i));
+						ImGui::Text(jsonData->GetAircraftSpecData().at(i).c_str());
 					}
 
 				}
@@ -207,21 +172,21 @@ void UIEngine::Run()
 		{
 
 			//Minus one since the last element is for avionics
-			for (auto i = 0; i < rightPanelOptions.size() - 1; i++)
+			for (auto i = 0; i < jsonData->GetRightPanelOptions().size() - 1; i++)
 			{
-				if (ImGui::CollapsingHeader(rightPanelOptions.at(i), ImGuiTreeNodeFlags_Leaf))
+				if (ImGui::CollapsingHeader(jsonData->GetRightPanelOptions().at(i).c_str(), ImGuiTreeNodeFlags_Leaf))
 				{ 
-					ImGui::TextWrapped(currentDetails.at(i));
+					ImGui::TextWrapped(jsonData->GetAircraftDetails().at(i).c_str());
 				}
 			}
 
 			//back() provides a reference to the last element in the container
 			//so no need to pass an index or iterate here
-			if (ImGui::CollapsingHeader(rightPanelOptions.back(), ImGuiTreeNodeFlags_Leaf))
+			if (ImGui::CollapsingHeader(jsonData->GetRightPanelOptions().back().c_str(), ImGuiTreeNodeFlags_Leaf))
 			{
-				for (const auto& avionic : currentAvionics)
+				for (const auto& avionic : jsonData->GetAircraftAvionics())
 				{
-					ImGui::TextWrapped(avionic);
+					ImGui::TextWrapped(avionic.c_str());
 				}
 			}
 			
@@ -240,184 +205,4 @@ void UIEngine::Run()
 
 	ImGui::SFML::Shutdown();
 
-}
-
-void UIEngine::GetAircraftImagesFromJSON()
-{
-	std::ifstream ifs("Content/aircraft.json");
-
-	nlohmann::json j;
-	ifs >> j;
-	
-	for (const auto& elem : j.items())
-	{
-		//string conversion
-		std::string tmp = elem.key();
-
-			//getting each aircraft from each category
-			//and placing it under their respective category
-			for (const auto& item : j[tmp])
-			{
-				std::string tmpImg = item["img"]; //aircraft image
-				std::string tmpName = item["name"]; //aircraft name
-				sf::Texture tmpTexture;
-
-				if (tmpTexture.loadFromFile(imgFilePath + tmpImg))
-				{
-					//for those wondering why a separate container for textures is necessary
-					//https://www.sfml-dev.org/tutorials/2.3/graphics-sprite.php#the-white-square-problem
-					//if you didnt read that the short verison is that when a sprite sets its texture
-					//it doesn't get an actual copy of the texture, it just stores a pointer to the texture itself
-					imgTextures.push_back(std::make_shared<sf::Texture>(tmpTexture));
-					aircraftImages.insert(std::pair<std::string, sf::Sprite>(tmpName, sf::Sprite(*imgTextures.back())));
-				}
-			}
-		
-	}
-}
-
-void UIEngine::GetAircraftInfoFromJSON()
-{
-	std::ifstream ifs("Content/aircraft.json");
-
-	nlohmann::json j;
-	ifs >> j;
-
-	for (const auto& elem : j.items())
-	{
-		//string conversion
-		std::string tmp = elem.key();
-
-		//going through each category
-		for (const auto& item : j[tmp])
-		{
-			//getting each aircraft name
-			std::string nameTmp = item["name"];
-
-			currentAircraft = nameTmp;
-
-			//getting the general specs for each aircraft
-			for (const auto& genSpec : item["genspecs"])
-			{
-				//getting each individual spec
-				std::string genSpecTmp = genSpec;
-
-				//associating the aircraft with its listed specs
-				aircraftGenData.insert(std::pair<std::string, std::string>(nameTmp, genSpecTmp));
-			}
-
-			for (const auto& perfSpec : item["perf"])
-			{
-				std::string perfSpecTmp = perfSpec;
-
-				aircraftPerfData.insert(std::pair<std::string, std::string>(nameTmp, perfSpecTmp));
-			}
-
-			for (const auto& aviSpec : item["avi"])
-			{
-				std::string aviSpecTmp = aviSpec;
-
-				aircraftAvionicData.insert(std::pair<std::string, std::string>(nameTmp, aviSpecTmp));
-			}
-
-			for (const auto& detailSpec : item["details"])
-			{
-				std::string detailSpecTmp = detailSpec;
-				aircraftDetailData.insert(std::pair<std::string, std::string>(nameTmp, detailSpecTmp));
-			}
-		}
-
-	}
-
-	/*for (std::pair<std::string, std::string> elem : aircraftData)
-	{
-		std::cout << elem.first << " :: " << elem.second << '\n';
-	}*/
-}
-
-const sf::Sprite& UIEngine::ShowAircraftImage()
-{
-	auto img = aircraftImages.find(currentAircraft);
-
-	if (img != aircraftImages.end())
-	{
-		return aircraftImages.at(currentAircraft);
-	}
-
-	return aircraftImages.at(0);
-}
-
-void UIEngine::ShowAircraftSpecs(SPEC_TYPE type)
-{
-	//we already have data in our container
-	//clear it from the previous selection
-	if (currentData.size() > 0)
-	{
-		currentData.clear();
-	}
-
-	switch (type)
-	{
-	case SPEC_TYPE::GEN:
-		GetAircraftSpecs(aircraftGenData);
-		break;
-	case SPEC_TYPE::PERF:
-		GetAircraftSpecs(aircraftPerfData);
-		break;
-	case SPEC_TYPE::AVI:
-		GetAircraftSpecs(aircraftAvionicData);
-		break;
-	default:
-		break;
-	}
-
-}
-
-void UIEngine::GetAircraftSpecs(const std::multimap<std::string, std::string>& map)
-{
-	auto search = map.begin();
-
-	if (search != map.end())
-	{
-		//getting the range of values for our aircraft key
-		auto range = map.equal_range(currentAircraft);
-
-		//for each value under this aircraft key
-		for (auto i = range.first; i != range.second; ++i)
-		{
-			//string conversion
-			auto tmp = i->second.c_str();
-
-			//add our values into this container
-			//to be displayed on the spec sheet
-			currentData.push_back(tmp);
-		}
-	}
-}
-
-void UIEngine::GetAircraftDetails()
-{
-	if (currentDetails.size() > 0 && currentAvionics.size() > 0)
-	{
-		currentDetails.clear();
-		currentAvionics.clear();
-	}
-
-	auto range = aircraftDetailData.equal_range(currentAircraft);
-	
-	for (auto i = range.first; i != range.second; ++i)
-	{
-		auto tmp = i->second.c_str();
-
-		currentDetails.push_back(tmp);
-	}
-
-	range = aircraftAvionicData.equal_range(currentAircraft);
-
-	for (auto i = range.first; i != range.second; ++i)
-	{
-		auto tmp = i->second.c_str();
-
-		currentAvionics.push_back(tmp);
-	}
 }
