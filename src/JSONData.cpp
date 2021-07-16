@@ -19,23 +19,18 @@ void JSONData::Init()
 
 	for (const auto& elem : json->items())
 	{
-		//string conversion
-		auto tmp = elem.key();
-
 		//adding each aircraft category
-		aircraftCategories.push_back(tmp);
+		aircraftCategories.push_back(elem.key());
 
 		//getting each aircraft from each category
-		for (const auto& item : *json->find(tmp))
+		for (const auto& item : *json->find(elem.key()))
 		{
-			std::string tmpImg = item["img"]; //aircraft image
-
-			auto tmpName = item["name"]; //aircraft name
-
-			sf::Texture tmpTexture; 
+			auto tmpImg = std::string(item["img"]); //aircraft image
+			auto name = std::string(item["name"]); //aircraft name
+			auto tmpTexture = sf::Texture(); //texture for aircraft image
 
 			//adding each aircraft name to a container
-			aircraftNames.push_back(tmpName);
+			aircraftNames.push_back(name);
 
 			//in here were getting the images for each aircraft
 			//and assigning them to a sf::Sprite
@@ -48,10 +43,10 @@ void JSONData::Init()
 				imgTextures.push_back(std::make_shared<sf::Texture>(tmpTexture));
 
 				//here we're assigning each aircraft string with its own respective image
-				aircraftImages.insert(std::pair<std::string, sf::Sprite>(tmpName, sf::Sprite(*imgTextures.back())));
+				aircraftImages.insert(std::pair<std::string, sf::Sprite>(name, sf::Sprite(*imgTextures.back())));
 			}
 
-			currentAircraft = tmpName;
+			currentAircraft = name;
 		}
 
 		
@@ -61,47 +56,43 @@ void JSONData::Init()
 	//and placing them in their respective maps
 	for (const auto& elem : json->items())
 	{
-		//string conversion
-		auto tmp = elem.key();
 
 		//going through each category
-		for (const auto& item : *json->find(tmp))
+		for (const auto& item : *json->find(elem.key()))
 		{
 			//getting each aircraft name
 			auto name = item["name"];
 
+			//getting each individual spec
+			
+			
 			//getting the general specs for each aircraft
 			for (const auto& genSpec : item["genspecs"])
 			{
-				//getting each individual spec
-				auto genSpecTmp = genSpec;
-
+				
 				//associating the aircraft with its listed specs
-				aircraftGenData.insert(std::pair<std::string, std::string>(name, genSpecTmp));
+				aircraftGenData.insert(std::pair<std::string, std::string>(name, genSpec));
 			}
 
 			//getting the performance stats
 			for (const auto& perfSpec : item["perf"])
 			{
-				auto perfSpecTmp = perfSpec;
 
-				aircraftPerfData.insert(std::pair<std::string, std::string>(name, perfSpecTmp));
+				aircraftPerfData.insert(std::pair<std::string, std::string>(name, perfSpec));
 			}
 
 			//getting the avionics
 			for (const auto& aviSpec : item["avi"])
 			{
-				auto aviSpecTmp = aviSpec;
 
-				aircraftAvionicData.insert(std::pair<std::string, std::string>(name, aviSpecTmp));
+				aircraftAvionicData.insert(std::pair<std::string, std::string>(name, aviSpec));
 			}
 
 			//getting details such as maker/nation
 			for (const auto& detailSpec : item["details"])
 			{
-				auto detailSpecTmp = detailSpec;
 
-				aircraftDetailData.insert(std::pair<std::string, std::string>(name, detailSpecTmp));
+				aircraftDetailData.insert(std::pair<std::string, std::string>(name, detailSpec));
 			}
 		}
 
@@ -124,12 +115,9 @@ void JSONData::GetAircraftSpecs(const std::multimap<std::string, std::string>& m
 		//for each value under this aircraft key
 		for (auto i = range.first; i != range.second; ++i)
 		{
-			//string conversion
-			auto tmp = i->second.c_str();
-
 			//add our values into this container
 			//to be displayed on the spec sheet
-			currentSpecData.push_back(tmp);
+			currentSpecData.push_back(i->second.c_str());
 		}
 	}
 }
@@ -154,9 +142,7 @@ const sf::Sprite& JSONData::GetAircraftImage()
 
 	lastAircraft = currentAircraft;
 
-	auto img = aircraftImages.find(currentAircraft);
-
-	if (img != aircraftImages.end())
+	if (aircraftImages.find(currentAircraft) != aircraftImages.end())
 	{
 		return aircraftImages.at(currentAircraft);
 	}
@@ -229,17 +215,13 @@ void JSONData::UpdateAircraftDetails()
 
 	for (auto i = range.first; i != range.second; ++i)
 	{
-		auto tmp = i->second.c_str();
-
-		currentDetails.push_back(tmp);
+		currentDetails.push_back(i->second.c_str());
 	}
 
 	range = aircraftAvionicData.equal_range(currentAircraft);
 
 	for (auto i = range.first; i != range.second; ++i)
 	{
-		auto tmp = i->second.c_str();
-
-		currentAvionics.push_back(tmp);
+		currentAvionics.push_back(i->second.c_str());
 	}
 }

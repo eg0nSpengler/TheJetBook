@@ -26,17 +26,16 @@ void AudioEngine::PlayAudio(SOUND_TYPE sfxType)
 	{
 	case SOUND_TYPE::MOUSE_OVER:
 		AudioManager->setBuffer(*SFX_MOUSE_OVER);
-		AudioManager->play();
 		break;
 	case SOUND_TYPE::SELECT_AIRCRAFT:
 		AudioManager->setBuffer(*SFX_SELECT_AIRCRAFT);
-		AudioManager->play();
 		break;
 	case SOUND_TYPE::SELECT_DROPDOWN_ITEM:
 		AudioManager->setBuffer(*SFX_SELECT_DROPDOWN_OPTION);
-		AudioManager->play();
 		break;
 	default:
 		break;
 	}
+
+	AudioManager->play();
 }

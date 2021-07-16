@@ -43,7 +43,7 @@ void UIEngine::Run()
 
 #if defined _DEBUG
 #else
-	style.WindowMenuButtonPosition = WINDOW_MENU_BUTTON;
+	//style.WindowMenuButtonPosition = WINDOW_MENU_BUTTON;
 #endif
 
 
