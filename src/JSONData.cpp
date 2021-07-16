@@ -1,4 +1,6 @@
 #include "JSONData.h"
+#include "UIDefines.h"
+
 #include <iostream>
 JSONData::JSONData()
 {
@@ -134,11 +136,24 @@ void JSONData::GetAircraftSpecs(const std::multimap<std::string, std::string>& m
 
 void JSONData::SetSpecSheet(SPEC_TYPE newSpecs)
 {
+	if (newSpecs == selectedSpecSheet)
+	{
+		return;
+	}
+
 	selectedSpecSheet = newSpecs;
 }
 
 const sf::Sprite& JSONData::GetAircraftImage()
 {
+	if (currentAircraft == lastAircraft)
+	{
+		//no need to loop through the map
+		return aircraftImages.at(currentAircraft);
+	}
+
+	lastAircraft = currentAircraft;
+
 	auto img = aircraftImages.find(currentAircraft);
 
 	if (img != aircraftImages.end())
@@ -203,6 +218,7 @@ void JSONData::UpdateSpecSheet()
 
 void JSONData::UpdateAircraftDetails()
 {
+
 	if (currentDetails.size() > 0 && currentAvionics.size() > 0)
 	{
 		currentDetails.clear();

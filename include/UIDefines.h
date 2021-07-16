@@ -1,6 +1,11 @@
 #pragma once
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
+#define CHILD_ROUNDING 1.0f
+#define FRAME_ROUNDING 1.0f
+#define WINDOW_MENU_BUTTON -1 //-1 for no button, 0 for left aligned, 1 for right aligned
+#define WINDOW_TITLE_ALIGN 0.50f
+#define WINDOW_SAFE_AREA_PADDING 30.0f
 #define PARENT_WINDOW_WIDTH 800
 #define PARENT_WINDOW_HEIGHT 600
 #define PARENT_WINDOW_TITLE "The JetBook"

@@ -76,6 +76,7 @@ private:
 	const std::string imgFilePath = "./Content/Images/";
 	const std::string aircraftJSONFilePath = "Content/aircraft.json";
 
+	std::string lastAircraft;
 	std::string currentAircraft;
 	SPEC_TYPE selectedSpecSheet;
 

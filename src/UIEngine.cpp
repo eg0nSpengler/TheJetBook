@@ -13,38 +13,59 @@ UIEngine::UIEngine()
 
 	audioEngine = std::make_unique<AudioEngine>();
 	jsonData = std::make_unique<JSONData>();
+	deltaTime = std::make_unique<sf::Clock>();
+	inputEvents = std::make_shared<sf::Event>();
+	window = std::make_shared<sf::RenderWindow>(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), " ", sf::Style::Close);
+
+	Init();
+}
+
+void UIEngine::Init()
+{
+	window->setVerticalSyncEnabled(true);
+
+	ImGui::SFML::Init(*window);
+
+	/*BEGIN IMGUI STYLE*/
+	ImGuiStyle& style = ImGui::GetStyle();
+
+	style.ChildRounding = CHILD_ROUNDING;
+	style.FrameRounding = FRAME_ROUNDING;
+	style.WindowTitleAlign = ImVec2(WINDOW_TITLE_ALIGN, style.WindowTitleAlign.y);
+
+	style.DisplaySafeAreaPadding = ImVec2(style.DisplaySafeAreaPadding.x, WINDOW_SAFE_AREA_PADDING);
+
+	/*END IMGUI STYLE*/
 }
 
 void UIEngine::Run()
 {
-	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), " ", sf::Style::Close);
-	window.setVerticalSyncEnabled(true);
 
-	ImGui::SFML::Init(window);
+#if defined _DEBUG
+#else
+	style.WindowMenuButtonPosition = WINDOW_MENU_BUTTON;
+#endif
 
-	sf::Color bgColor = sf::Color::Transparent;
+
+	auto bgColor = sf::Color::Transparent;
 	float color[3] = { 0.f, 0.f, 0.f };
 
-	window.resetGLStates();
+	window->resetGLStates();
 
-	sf::Clock deltaTime;
-
-	auto acStr = " ";
-
-	while (window.isOpen())
+	while (window->isOpen())
 	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			ImGui::SFML::ProcessEvent(event);
 
-			if (event.type == sf::Event::Closed)
+		while (window->pollEvent(*inputEvents))
+		{
+			ImGui::SFML::ProcessEvent(*inputEvents);
+
+			if (inputEvents->type == sf::Event::Closed)
 			{
-				window.close();
+				window->close();
 			}
 		}
 
-		ImGui::SFML::Update(window, deltaTime.restart());
+		ImGui::SFML::Update(*window, deltaTime->restart());
 
 		ImGui::SetNextWindowSize(ImVec2(PARENT_WINDOW_WIDTH, PARENT_WINDOW_HEIGHT), ImGuiCond_Once);
 		//So we only show the demo window if we're in DEBUG config
@@ -55,12 +76,11 @@ void UIEngine::Run()
 #endif
 
 		ImGui::Begin(PARENT_WINDOW_TITLE, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove);
-		
-
+	
 		/*BEGIN LEFT PANEL*/
 		ImGui::BeginChild("LEFTPANE", ImVec2(LEFT_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT), true, ImGuiWindowFlags_NoNavInputs);
 
-		static bool isSelected = false;
+		auto static isSelected = false;
 		
 		for (const auto& category : jsonData->json->items())
 		{
@@ -74,7 +94,7 @@ void UIEngine::Run()
 					for (const auto& ac : jsonData->json->at(tmp))
 					{
 						//getting the aircraft name
-						std::string acName = ac["name"];
+						auto acName = std::string(ac["name"]);
 
 						//creating a selectable element for each aircraft
 						if (ImGui::Selectable(acName.c_str(), isSelected))
@@ -91,7 +111,7 @@ void UIEngine::Run()
 		/*END LEFT PANEL*/
 		ImGui::EndChild(); ImGui::SameLine();
 
-		static ImVec2 defaultCursorPos = ImGui::GetCursorPos();
+		auto defaultCursorPos = ImGui::GetCursorPos();
 
 		/*BEGIN CENTER PANEL*/
 		if (ImGui::BeginChild("CENTERPANE", ImVec2(CENTER_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT / 2), false, ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
@@ -166,7 +186,6 @@ void UIEngine::Run()
 
 		ImGui::SetCursorPos(newCursorPos);
 
-
 		/*BEGIN RIGHT PANEL*/
 		if (ImGui::BeginChild("RIGHTPANE", ImVec2(LEFT_PANE_WINDOW_WIDTH, LEFT_PANE_WINDOW_HEIGHT), true, ImGuiWindowFlags_NoNavInputs))
 		{
@@ -197,9 +216,10 @@ void UIEngine::Run()
 
 		ImGui::End();
 
-		window.clear(bgColor);
-		ImGui::SFML::Render(window);
-		window.display();
+		window->clear(bgColor);
+		ImGui::SFML::Render(*window);
+
+		window->display();
 	}
 
 

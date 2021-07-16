@@ -33,7 +33,7 @@
       "genspecs": [ "1", "49ft 5in", "32ft 8in", "16ft", "300 sq ft", "18,900 lb", "26,500 lb", "42,300 lb", "7,000 lb", "1x PW F100-PW-229" ],
       "perf": [ "1,145 kn", "400 kn", "150 kn", "295 nm", "2,277 nm", "60,000 ft", "+9.0", "324deg/s", "72,000 ft/min", "1.095" ],
       "details": [ "Multirole/Air superiority", "United States", "General Dynamics", "February 2nd 1974", "August 17th 1978", "4,604", "In service", "Fighting Falcon/Viper" ],
-      "avi": [ "AN/APG-68(V)", "AN/ALR-56M RWR", "AN/ALE-47 chaff/flare dispenser", "ALQ-119/ALQ-131 ECM pod", "AXP-113(V) data transfer system" ]
+      "avi": [ "AN/APG-68(V) radar", "AN/ALR-56M RWR", "AN/ALE-47 chaff/flare dispenser", "ALQ-119/ALQ-131 ECM pod", "AXP-113(V) data transfer system" ]
     },
 
     {
@@ -121,7 +121,7 @@
       "genspecs": [ "1", "51 ft", "35 ft", "14 ft", "460 sq ft", "29,300 lb", "49,540 lb", "70,000 lb", "18,250 lb", "1X PW F135-PW-100" ],
       "perf": [ "n/a", "n/a", "n/a", "760 nm", "n/a", "50,000 ft", "+9.0", "n/a", "n/a", "0.87" ],
       "details": [ "Stealth multirole", "United States", "Lockheed Martin", "December 15th 2006", "July 31st 2015 (F-35B)", "665+", "In service", "n/a" ],
-      "avi": ["n/a"]
+      "avi": ["AN/APG-81 AESA radar", "AN/ASQ-239 Electronic Warfare/Countermeasures system", "AN/AAQ-40 EOTS", "AN/AAQ-37 EODAS", "AN/ASQ-242 CNI avionic suite"]
     },
     {
       "name": "F-22 Raptor",
